@@ -1,0 +1,21 @@
+מצבי HASH MODE
+
+1.	SHA ללא הגנות כלל
+2.	SHA עם SALT
+3.	SHA עם PEPPER
+4.	SHA עם SALT AND PEPPER
+5.	BYCRPT עם SALT מובנה
+6.	BYCRPT עם PEPPER
+7.	ARGON2 עם SALT מובנה
+8.	ARGON2 עם PEPPER
+
+מנגנוני הגנה –
+1.	ללא הגנות
+2.	TOTP
+3.	CAPTCHA
+4.	RATE LIMIT
+5.	ACCOUNT LOCK
+
+מתקפות –
+1.	BRUTE FORCE
+2.	PASSWORD SPRAYING
