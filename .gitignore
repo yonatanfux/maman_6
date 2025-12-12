@@ -76,7 +76,7 @@ ipython_config.py
 
 # Miscellaneous IDEs
 .vscode/           # Visual Studio Code
-.idea/             # PyCharm
+.idea/**             # PyCharm
 *.swp
 .DS_Store          # macOS specific
 .vagrant/          # Vagrant specific
