@@ -1,4 +1,4 @@
-from client import LoginClient
+from crack.client import LoginClient
 import secrets
 import string
 from src.server import Server
