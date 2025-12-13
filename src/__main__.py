@@ -7,7 +7,8 @@ import logging
 from datetime import datetime, timedelta, timezone
 from flask import Flask, request, jsonify
 
-from src.sql_manager import SqlManager
+#from src.sql_manager import SqlManager
+from src.in_memory_db import SqlManager
 from src.manage_hash import ManageHash
 from src.args import parse_args
 

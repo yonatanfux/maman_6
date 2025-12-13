@@ -110,7 +110,7 @@ class LoginClient:
         
         # Something else wrong
         else:
-            print(f"Login failed: {resp.status_code} {resp.text}")
+            # print(f"Login failed: {resp.status_code} {resp.text}")
             return False
         
 
