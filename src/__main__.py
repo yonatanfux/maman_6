@@ -1,11 +1,16 @@
 import time
 import json
 import secrets
+
 import pyotp
 import logging
+import uvicorn
+from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+import sqlite3
 
 from datetime import datetime, timedelta, timezone
-from flask import Flask, request, jsonify
 
 #from src.sql_manager import SqlManager
 from src.in_memory_db import SqlManager
@@ -29,7 +34,7 @@ with open("config.json", 'r') as f:
 defense_config, hash_mode = parse_args()
 sql_manager = SqlManager(config['DB_PATH'])
 hash_manager = ManageHash(config['DB_PATH'], hash_mode, config['GLOBAL_PEPPER'])
-app = Flask(__name__)
+app = FastAPI()
 
 rate_counters = dict()
 failed_counters = dict()
@@ -62,13 +67,13 @@ def log_attempt(group_seed, username, hash_mode, protection_flags, result, laten
         attempts_file.write(",".join([str(i) for i in entry]) + "\n")
 
 
-def rate_limit_key():
-    ip = request.remote_addr or "unknown"
+def rate_limit_key(host: str):
+    ip = host
     return f"ip:{ip}"
 
 
-def check_rate_limit():
-    key = rate_limit_key()
+def check_rate_limit(host: str):
+    key = rate_limit_key(host)
     now = time.time()
     window = 60
     rec = rate_counters.get(key)
@@ -121,37 +126,32 @@ def captcha_required_for(username):
     return username["failed_attempts"] >= config["CAPTCHA_AFTER"]
 
 
-@app.teardown_appcontext
-def close_app(exception):
-    # attempts_file.close()
-    pass
-
-@app.route("/register", methods=["POST"])
-def register():
+@app.post("/register")
+async def register(request: Request):
     start = time.time()
-    data = request.get_json() or {}
+    data = await request.json() or {}
     username = data.get("username")
     password = data.get("password")
     group_seed = data.get("group_seed", config['GROUP_SEED'])
 
     if not username or not password:
-        return jsonify({"error": "username and password required"}), 400
+        return JSONResponse({"error": "username and password required"}, status_code=400)
 
     res = add_user(username, password)
     if res:
         latency_ms = int((time.time() - start) * 1000)
         log_attempt(group_seed, username, hash_mode, ["register"], "success", latency_ms)
-        return jsonify({"status": "registered"}), 201
+        return JSONResponse({"status": "registered"}, status_code=201)
     else:
         latency_ms = int((time.time() - start) * 1000)
         log_attempt(group_seed, username, hash_mode, ["register"], "failure", latency_ms)
-        return jsonify({"error": "internal error"}), 500
+        return JSONResponse({"error": "internal error"}, status_code=500) 
 
 
-@app.route("/login", methods=["POST"])
-def login():
+@app.post("/login")
+async def login(request: Request):
     start = time.time()
-    data = request.get_json() or {}
+    data = await request.json()
     username = data.get("username")
     password = data.get("password")
     group_seed = data.get("group_seed", config['GROUP_SEED'])
@@ -159,20 +159,20 @@ def login():
     protection_flags = defense_config.to_protection_flags()
 
     if defense_config.rate_limit:
-        if check_rate_limit():
+        if check_rate_limit(request.client.host):
             latency_ms = int((time.time() - start) * 1000)
             log_attempt(group_seed, username, None, ["rate_limit"], "failure", latency_ms)
-            return jsonify({"error": "rate limit exceeded"}), 429
+            return JSONResponse({"error": "rate limit exceeded"}, status_code=429)
 
     row = sql_manager.get_user_by_username(username)
     if not row:
-        return jsonify({"error": "user does not exist"}), 404
+        return JSONResponse({"error": "user does not exist"}, status_code=404)
 
     if defense_config.account_lock:
         if is_locked(username):
             latency_ms = int((time.time() - start) * 1000)
             log_attempt(group_seed, username, hash_mode, protection_flags, "locked", latency_ms)
-            return jsonify({"error": "account locked"}), 403
+            return JSONResponse({"error": "account locked"}, status_code=403)
 
     if defense_config.captcha:
         if captcha_required_for(username):
@@ -183,12 +183,12 @@ def login():
                 latency_ms = int((time.time() - start) * 1000)
                 log_attempt(group_seed, username, hash_mode, protection_flags, "captcha_required",
                             latency_ms)
-                return jsonify({"captcha_required": True}), 403
+                return JSONResponse({"captcha_required": True}, status_code=403)
 
     # Test login's password
     user = sql_manager.get_user_by_username(username)
     if user is None:
-        return jsonify({"status": "no such user exists"}), 404
+        return JSONResponse({"status": "no such user exists"}, status_code=404)
     ok = hash_manager.check_hash(user['password_hash'], password, user['salt'])
 
     latency_ms = int((time.time() - start) * 1000)
@@ -196,22 +196,22 @@ def login():
         reset_failed(username)
         if defense_config.totp:
             log_attempt(group_seed, username, hash_mode, protection_flags, "partial_success", latency_ms)
-            return jsonify({"status": "ok, move to /login_totp"}), 301
+            return JSONResponse({"status": "ok, move to /login_totp"}, status_code=301)
         else:
             log_attempt(group_seed, username, hash_mode, protection_flags, "success", latency_ms)
-            return jsonify({"status": "ok"}), 200
+            return JSONResponse({"status": "ok"}, status_code=200)
     else:
         register_failed(username)
         log_attempt(group_seed, username, hash_mode, protection_flags, "failure", latency_ms)
-        return jsonify({"error": "invalid credentials"}), 401
+        return JSONResponse({"error": "invalid credentials"}, status_code=401)
 
 
-@app.route("/login_totp", methods=["POST"])
-def login_totp():
+@app.post("/login_totp")
+async def login_totp(request: Request):
     if not defense_config.totp:
-        return jsonify({"error": "totp isn't configured in server"}), 405
+        return JSONResponse({"error": "totp isn't configured in server"}, status_code=405)
     start = time.time()
-    data = request.get_json() or {}
+    data = await request.json() or {}
     username = data.get("username")
     totp_token = data.get("totp_token")
     group_seed = data.get("group_seed", config['GROUP_SEED'])
@@ -221,7 +221,7 @@ def login_totp():
     if not user or not user["totp_secret"]:
         latency_ms = int((time.time() - start) * 1000)
         log_attempt(group_seed, username, None, protection_flags, "failure", latency_ms)
-        return jsonify({"error": "unknown user or no totp configured"}), 401
+        return JSONResponse({"error": "unknown user or no totp configured"}, status_code=401)
 
     totp = pyotp.TOTP(user["totp_secret"])
     try:
@@ -233,38 +233,38 @@ def login_totp():
     if ok:
         reset_failed(username)
         log_attempt(group_seed, username, None, protection_flags, "success", latency_ms)
-        return jsonify({"status": "ok"}), 200
+        return JSONResponse({"status": "ok"})
     else:
         register_failed(username)
         log_attempt(group_seed, username, None, protection_flags, "failure", latency_ms)
-        return jsonify({"error": "invalid totp"}), 401
+        return JSONResponse({"error": "invalid totp"}, status_code=401)
 
 
-@app.route("/get_base_totp", methods=["GET"])
-def get_base_totp():
-    data = request.get_json() or {}
+@app.get("/get_base_totp")
+async def get_base_totp(request: Request):
+    data = await request.json() or {}
     username = data.get("username")
     user = sql_manager.get_user_by_username(username)
-    return jsonify({"base_totp": user["totp_secret"]}), 200
+    return JSONResponse({"base_totp": user["totp_secret"]})
 
 
-@app.route("/admin/get_captcha_token", methods=["GET"])
-def get_captcha_token():
+@app.get("/admin/get_captcha_token")
+async def get_captcha_token(request: Request):
     global current_captcha
-    group_seed = request.args.get("group_seed", "")
+    group_seed = await request.json().get("group_seed", "")
     if group_seed != config['GROUP_SEED']:
-        return jsonify({"error": "unauthorized"}), 403
+        return JSONResponse({"error": "unauthorized"}, status_code=403)
     token = secrets.token_urlsafe(16)
     current_captcha = token
-    return jsonify({"captcha_token": token}), 200
+    return JSONResponse({"captcha_token": token}, status_code=200)
 
-@app.route("/set_hashmode", methods=["POST"])
-def set_hashmode():
+@app.post("/set_hashmode")
+async def set_hashmode():
     pass
 
 def main():
     logger.info(f"Running, defense_config={str(defense_config)}, {hash_mode=}")
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
 
 
 if __name__ == "__main__":
