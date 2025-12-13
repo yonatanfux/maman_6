@@ -47,9 +47,6 @@ class DefenseConfig:
         })
 
 
-defense_config = DefenseConfig()
-
-
 def add_user(username, password, input_salt=None):
     totp_secret = pyotp.random_base32()
     salt, password_hash = hash_manager.create_hash_password(password, input_salt)
@@ -184,9 +181,7 @@ def login():
 
     row = sql_manager.get_user_by_username(username)
     if not row:
-        latency_ms = int((time.time() - start) * 1000)
-        log_attempt(group_seed, username, None, protection_flags, "failure", latency_ms)
-        return jsonify({"error": "invalid credentials"}), 401
+        return jsonify({"error": "user does not exist"}), 401
 
     if defense_config.account_lock:
         if is_locked(username):
