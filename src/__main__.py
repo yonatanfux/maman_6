@@ -2,19 +2,18 @@ import time
 import json
 import secrets
 import pyotp
-import argparse
 
 from datetime import datetime, timedelta, timezone
 from flask import Flask, request, jsonify
 
 from src.sql_manager import SqlManager
 from src.manage_hash import ManageHash
+from src.args import parse_args
 
 with open("config.json", 'r') as f:
     config = json.loads(f.read())
 
-hash_mode = config["HASH_MODE"]
-
+defense_config, hash_mode = parse_args()
 sql_manager = SqlManager(config['DB_PATH'])
 hash_manager = ManageHash(config['DB_PATH'], hash_mode, config['GLOBAL_PEPPER'])
 app = Flask(__name__)
@@ -50,16 +49,10 @@ class DefenseConfig:
 
 defense_config = DefenseConfig()
 
-
-def add_user(username, password, input_salt=None):
-    totp_secret = pyotp.random_base32()
-    salt, password_hash = hash_manager.create_hash_password(password, input_salt)
-    return sql_manager.insert_user(username, password_hash, salt, totp_secret)
-
-
 with open(config['USERS_PATH'], 'r', encoding='utf-8') as f:
     for user in json.load(f):
-        res = add_user(user['username'], user['password'], user['salt'])
+        totp_secret = pyotp.random_base32()
+        res = hash_manager.add_user(user['username'], user['password'], totp_secret, user['salt'])
 
 
 def log_attempt(group_seed, username, hash_mode, protection_flags, result, latency_ms):
@@ -272,59 +265,7 @@ def get_captcha_token():
     return jsonify({"captcha_token": token}), 200
 
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--defense",
-        required=True,
-        nargs="+",
-        choices=[
-            "no-defense",
-            "totp",
-            "captcha",
-            "rate-limit",
-            "account_lock",
-        ],
-        help="Defense mechanism to enable"
-    )
-
-    parser.add_argument(
-        "--hash-mode",
-        required=True,
-        choices=[
-            "SHA_PLAIN",
-            "SHA_SALT",
-            "SHA_PEPPER",
-            "SHA_SALT_PEPPER",
-            "BCRYPT",
-            "BCRYPT_PEPPER",
-            "ARGON2",
-            "ARGON2_PEPPER"
-        ],
-        help="Hash mode to use"
-    )
-
-    args = parser.parse_args()
-
-    defense_cfg = DefenseConfig()
-
-    if "no-defense" in args.defense:
-        defense_cfg.no_defense = True
-        return defense_cfg
-
-    defense_cfg.totp = "totp" in args.defense
-    defense_cfg.captcha = "captcha" in args.defense
-    defense_cfg.rate_limit = "rate-limit" in args.defense
-    defense_cfg.account_lock = "account_lock" in args.defense
-
-    return defense_cfg, args.hash_mode
-
-
 def main():
-    global defense_config, hash_mode
-    defense_config, hash_mode = parse_args()
-    print(defense_config)
-    print(hash_mode)
     app.run(host="0.0.0.0", port=5000, debug=True)
 
 
