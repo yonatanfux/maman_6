@@ -1,4 +1,4 @@
-from crack.client import LoginClient
+from client import LoginClient
 import secrets
 import string
 
@@ -32,6 +32,7 @@ weak_passwords = []
 with open('crack/popular_passwords.txt', 'r') as f:
     for line in f:
         weak_passwords.append(line.strip())
+
 
 def build_password_map(med_amount = 20000, strong_amount=20000):
     passwords = []

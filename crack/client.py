@@ -23,7 +23,7 @@ class LoginClient:
         self.base_url = base_url.rstrip("/")
         self.group_seed = group_seed
         self.timeout_s = timeout_s
-        self.session = requests.Session()
+        self.session = requests
 
     def _post_json(self, path: str, payload: Dict[str, Any]) -> requests.Response:
         url = f"{self.base_url}{path}"
