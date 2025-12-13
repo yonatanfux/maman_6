@@ -51,17 +51,27 @@ def close_connection():
 
 
 def log_attempt(group_seed, username, hash_mode, protection_flags, result, latency_ms):
-    entry = {
-        "timestamp": datetime.utcnow().isoformat() + "Z",
-        "group_seed": group_seed,
-        "username": username,
-        "hash_mode": hash_mode,
-        "protection_flags": protection_flags,
-        "result": result,
-        "latency_ms": latency_ms
-    }
+    # entry = {
+    #     "timestamp": datetime.utcnow().isoformat() + "Z",
+    #     "group_seed": group_seed,
+    #     "username": username,
+    #     "hash_mode": hash_mode,
+    #     "protection_flags": protection_flags,
+    #     "result": result,
+    #     "latency_ms": latency_ms
+    # }
+    entry = [
+        datetime.utcnow().isoformat() + "Z",
+        group_seed,
+        username,
+        hash_mode,
+        protection_flags,
+        result,
+        latency_ms
+    ]
+
     with open(config["ATTEMPTS_LOG"], "a", encoding="utf-8") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        f.write(",".join(entry))
 
 
 def rate_limit_key():
