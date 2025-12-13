@@ -4,10 +4,12 @@ import secrets
 import pyotp
 import argparse
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from flask import Flask, request, jsonify
 
 from src.sql_manager import SqlManager
+from src.manage_hash import ManageHash
+
 from src import consts
 from src.hash_utils import *
 
@@ -17,7 +19,7 @@ with open("config.json", 'r') as f:
 hash_mode = config["HASH_MODE"]
 
 sql_manager = SqlManager()
-
+hash_manager = ManageHash(config['DB_PATH'], hash_mode, config['GLOBAL_PEPPER'])
 app = Flask(__name__)
 
 rate_counters = {}
@@ -100,13 +102,10 @@ def check_rate_limit():
 
 
 def is_locked(username):
-    db = sql_manager.get_db()
-    c = db.cursor()
-    c.execute("SELECT locked_until FROM users WHERE username = ?", (username,))
-    row = c.fetchone()
-    if not row:
+    user = sql_manager.get_user_by_username(username)
+    if not user:
         return False
-    locked_until = row["locked_until"]
+    locked_until = user["locked_until"]
     if locked_until:
         try:
             dt = datetime.fromisoformat(locked_until)
@@ -118,36 +117,25 @@ def is_locked(username):
 
 
 def register_failed(username):
-    db = sql_manager.get_db()
-    c = db.cursor()
-    c.execute("SELECT failed_attempts FROM users WHERE username = ?", (username,))
-    row = c.fetchone()
-    if row:
-        fails = row["failed_attempts"] + 1
+    user = sql_manager.get_user_by_username(username)
+    if user:
+        fails = user["failed_attempts"] + 1
         lock_until = None
         if fails >= config["LOCKOUT_THRESHOLD"]:
-            lock_until = (datetime.utcnow() + timedelta(seconds=config["LOCKOUT_SECONDS"])).isoformat()
+            lock_until = (datetime.now(timezone.utc) + timedelta(seconds=config["LOCKOUT_SECONDS"])).isoformat()
             fails = 0
-        c.execute("UPDATE users SET failed_attempts = ?, locked_until = ? WHERE username = ?",
-                  (fails, lock_until, username))
-        db.commit()
+        
+        sql_manager.update_user_by_username(username, failed_attempts=fails, locked_until=lock_until)
 
 
 def reset_failed(username):
-    db = sql_manager.get_db()
-    c = db.cursor()
-    c.execute("UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE username = ?", (username,))
-    db.commit()
-
+    sql_manager.update_user_by_username(username, failed_attempts=0, locked_until=None)
 
 def captcha_required_for(username):
-    db = sql_manager.get_db()
-    c = db.cursor()
-    c.execute("SELECT failed_attempts FROM users WHERE username = ?", (username,))
-    row = c.fetchone()
-    if not row:
+    user = sql_manager.get_user_by_username(username)
+    if not username:
         return False
-    return row["failed_attempts"] >= config["CAPTCHA_AFTER"]
+    return username["failed_attempts"] >= config["CAPTCHA_AFTER"]
 
 
 @app.route("/register", methods=["POST"])
@@ -161,38 +149,16 @@ def register():
     if not username or not password:
         return jsonify({"error": "username and password required"}), 400
 
-    salt = None
-    if hash_mode == "sha256":
-        salt = secrets.token_hex(8)
-
     totp_secret = pyotp.random_base32()
-
-    try:
-        if hash_mode == "sha256":
-            stored_hash = hash_password(password, "sha256", salt=salt, pepper=config["GLOBAL_PEPPER"])
-        elif hash_mode == "bcrypt":
-            stored_hash = hash_password(password, "bcrypt")
-            stored_hash = stored_hash.decode("utf-8", errors="ignore")
-        elif hash_mode == "argon2":
-            stored_hash = hash_password(password, "argon2")
-        else:
-            return jsonify({"error": "unsupported hash_mode"}), 400
-
-        db = sql_manager.get_db()
-        c = db.cursor()
-        c.execute("INSERT INTO users (username, hash_mode, password_hash, salt, totp_secret) VALUES (?, ?, ?, ?, ?)",
-                  (username, hash_mode, stored_hash, salt, totp_secret))
-        db.commit()
-
+    res = hash_manager.add_user(username, password, totp_secret)
+    if res:
         latency_ms = int((time.time() - start) * 1000)
         log_attempt(group_seed, username, hash_mode, ["register"], "success", latency_ms)
-
         return jsonify({"status": "registered", "totp_secret": totp_secret}), 201
-
-    except Exception as e:
+    else:
         latency_ms = int((time.time() - start) * 1000)
         log_attempt(group_seed, username, hash_mode, ["register"], "failure", latency_ms)
-        return jsonify({"error": "internal error", "detail": str(e)}), 500
+        return jsonify({"error": "internal error"}), 500
 
 
 @app.route("/login", methods=["POST"])
@@ -211,10 +177,7 @@ def login():
             log_attempt(group_seed, username, None, ["rate_limit"], "failure", latency_ms)
             return jsonify({"error": "rate limit exceeded"}), 429
 
-    db = sql_manager.get_db()
-    c = db.cursor()
-    c.execute("SELECT * FROM users WHERE username = ?", (username,))
-    row = c.fetchone()
+    row = sql_manager.get_user_by_username(username)
     if not row:
         latency_ms = int((time.time() - start) * 1000)
         log_attempt(group_seed, username, None, protection_flags, "failure", latency_ms)
@@ -233,30 +196,16 @@ def login():
                         latency_ms)
             return jsonify({"captcha_required": True}), 403
 
-    stored_hash = row["password_hash"]
-    salt = row["salt"]
-
-    if hash_mode == "bcrypt" and isinstance(stored_hash, str):
-        stored_hash_bytes = stored_hash.encode("utf-8")
-    else:
-        stored_hash_bytes = stored_hash
-
-    ok = False
-    try:
-        if hash_mode == "sha256":
-            ok = verify_password(password, stored_hash, "sha256", salt, pepper=config["GLOBAL_PEPPER"])
-        elif hash_mode == "bcrypt":
-            ok = verify_password(password, stored_hash_bytes, "bcrypt")
-        elif hash_mode == "argon2":
-            ok = verify_password(password, stored_hash, "argon2")
-    except Exception:
-        ok = False
-
+    ok = hash_manager.login(username, password)
     latency_ms = int((time.time() - start) * 1000)
     if ok:
         reset_failed(username)
-        log_attempt(group_seed, username, hash_mode, protection_flags, "success", latency_ms)
-        return jsonify({"status": "ok"}), 200
+        if defense_config.totp:
+            log_attempt(group_seed, username, hash_mode, protection_flags, "partial_success", latency_ms)
+            return jsonify({"status": "ok, move to /login_totp"}), 200
+        else:
+            log_attempt(group_seed, username, hash_mode, protection_flags, "success", latency_ms)
+            return jsonify({"status": "ok"}), 200
     else:
         register_failed(username)
         log_attempt(group_seed, username, hash_mode, protection_flags, "failure", latency_ms)
@@ -274,16 +223,13 @@ def login_totp():
     group_seed = data.get("group_seed", consts.GROUP_SEED)
 
     protection_flags = defense_config.to_protection_flags()
-    db = sql_manager.get_db()
-    c = db.cursor()
-    c.execute("SELECT totp_secret FROM users WHERE username = ?", (username,))
-    row = c.fetchone()
-    if not row or not row["totp_secret"]:
+    user = sql_manager.get_user_by_username(username)
+    if not user or not user["totp_secret"]:
         latency_ms = int((time.time() - start) * 1000)
         log_attempt(group_seed, username, None, protection_flags, "failure", latency_ms)
         return jsonify({"error": "unknown user or no totp configured"}), 401
 
-    totp = pyotp.TOTP(row["totp_secret"])
+    totp = pyotp.TOTP(user["totp_secret"])
     try:
         ok = totp.verify(str(totp_token), valid_window=1)
     except Exception:

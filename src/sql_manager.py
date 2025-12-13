@@ -1,10 +1,7 @@
 import sqlite3
 
-DB_PATH = "auth.db"
-
-
 class SqlManager:
-    def __init__(self, db_path=DB_PATH):
+    def __init__(self, db_path):
         self._db_path = db_path
         with sqlite3.connect(self._db_path) as conn:
             c = conn.cursor()
