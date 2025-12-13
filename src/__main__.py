@@ -253,7 +253,7 @@ def get_captcha_token():
 
 def main():
     logger.info(f"Running, defense_config={str(defense_config)}, {hash_mode=}")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
 
 if __name__ == "__main__":
