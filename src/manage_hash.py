@@ -1,18 +1,18 @@
 import json
-import hash_utils
-from sql_manager import SqlManager
+from src import hash_utils
+from src.sql_manager import SqlManager
 
 
 class ManageHash(object):
 
-    def __init__(self, DB_PATH, mode, pepper):
-        self._sql = SqlManager(DB_PATH)
+    def __init__(self, db_path, mode, pepper):
+        self._sql = SqlManager(db_path)
         self._mode = mode
         self._PEPPER = pepper
 
-    def load_users(self, PATH):
+    def load_users(self, path):
 
-        with open(PATH, "r", encoding="utf-8") as f:
+        with open(path, "r", encoding="utf-8") as f:
             for user in json.load(f):
                 self.add_user(user['username'], user['password'], user['salt'])
 
@@ -63,7 +63,6 @@ class ManageHash(object):
 
         password_hash = self._hash(password, salt, self._PEPPER)
         return self._sql.insert_user(username, password_hash, salt, totp_secret)
-
 
     def login(self, username, given_password):
         user = self._sql.get_user_by_username(username)

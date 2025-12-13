@@ -18,7 +18,7 @@ with open("config.json", 'r') as f:
 
 hash_mode = config["HASH_MODE"]
 
-sql_manager = SqlManager()
+sql_manager = SqlManager(config['DB_PATH'])
 hash_manager = ManageHash(config['DB_PATH'], hash_mode, config['GLOBAL_PEPPER'])
 app = Flask(__name__)
 

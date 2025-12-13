@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class SqlManager:
     def __init__(self, db_path):
         self._db_path = db_path
