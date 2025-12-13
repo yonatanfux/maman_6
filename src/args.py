@@ -37,14 +37,15 @@ def parse_args():
     args = parser.parse_args()
 
     defense_cfg = DefenseConfig()
+    hash_mode = args.hash_mode
 
     if "no-defense" in args.defense:
         defense_cfg.no_defense = True
-        return defense_cfg
+        return defense_cfg, hash_mode
 
     defense_cfg.totp = "totp" in args.defense
     defense_cfg.captcha = "captcha" in args.defense
     defense_cfg.rate_limit = "rate-limit" in args.defense
     defense_cfg.account_lock = "account_lock" in args.defense
 
-    return defense_cfg, args.hash_mode
+    return defense_cfg, hash_mode
