@@ -2,6 +2,7 @@
   "HASH_MODE": "argon2",
   "DB_PATH": "auth.db",
   "ATTEMPTS_LOG": "attempts.log",
+  "GROUP_SEED": 413134,
   "GLOBAL_PEPPER": "0urG10bAlP3PPer",
   "RATE_LIMIT_PER_MIN": 60,
   "LOCKOUT_THRESHOLD": 5,
