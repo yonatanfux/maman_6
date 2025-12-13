@@ -54,7 +54,7 @@ class ManageHash(object):
         elif self._mode == 'ARGON2_PEPPER':
             return hash_utils.argon2_check(hash, password, pepper)
 
-    def add_user(self, username, password, salt=None):
+    def add_user(self, username, password, totp_secret, salt=None):
 
         if self._mode in ['SHA_SALT', 'SHA_SALT_PEPPER'] and salt is None:
             salt = hash_utils.random_salt()
@@ -62,11 +62,8 @@ class ManageHash(object):
             salt = ''
 
         password_hash = self._hash(password, salt, self._PEPPER)
-        res = self._sql.insert_user(username, password_hash, salt)
-        if res:
-            return {'code': 200}
-        else:
-            return {'code': 401}
+        return self._sql.insert_user(username, password_hash, salt, totp_secret)
+
 
     def login(self, username, given_password):
         user = self._sql.get_user_by_username(username)
