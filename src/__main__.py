@@ -21,7 +21,7 @@ app = Flask(__name__)
 
 rate_counters = dict()
 failed_counters = dict()
-current_captcha = dict()
+current_captcha = secrets.token_urlsafe(16)
 
 
 class DefenseConfig:
