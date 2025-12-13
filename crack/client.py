@@ -9,6 +9,14 @@ import requests
 import pyotp
 
 # defenses = ['none', 'totp', 'captcha', 'rate_limit', 'account_lock']
+class Resp(object):
+    def __init__(self, r):
+        try:
+            self.data = r.json()
+        except Exception:
+            self.data = {}
+        self.status_code = r.status_code
+        self.text = r.text
 
 class LoginClient:
     def __init__(self, base_url: str, group_seed: str, timeout_s: float = 10.0):
@@ -19,22 +27,23 @@ class LoginClient:
 
     def _post_json(self, path: str, payload: Dict[str, Any]) -> requests.Response:
         url = f"{self.base_url}{path}"
-        return self.session.post(url, json=payload, timeout=self.timeout_s)
+        with self.session.post(url, json=payload, timeout=self.timeout_s) as r:
+            return Resp(r)
 
     def _get_json(self, path: str, params: Optional[Dict[str, Any]] = None, json_body: Optional[Dict[str, Any]] = None) -> requests.Response:
         # Note: your server reads JSON body in GET handlers too (nonstandard but present).
         url = f"{self.base_url}{path}"
-        return self.session.get(url, params=params, json=json_body, timeout=self.timeout_s)
+        with self.session.get(url, params=params, json=json_body, timeout=self.timeout_s) as r:
+            return Resp(r)
 
     def _fetch_captcha_token(self) -> str:
         # Server: /admin/get_captcha_token requires group_seed query param to match config['GROUP_SEED'].
         resp = self._get_json("/admin/get_captcha_token", params={"group_seed": self.group_seed})
         if resp.status_code != 200:
             raise RuntimeError(f"Failed to fetch captcha token: {resp.status_code} {resp.text}")
-        data = resp.json()
-        token = data.get("captcha_token")
+        token = resp.data.get("captcha_token")
         if not token:
-            raise RuntimeError(f"No captcha_token in response: {data}")
+            raise RuntimeError(f"No captcha_token in response: {resp.data}")
         return str(token)
 
 
@@ -66,11 +75,7 @@ class LoginClient:
 
         # Handle account lock (HTTP 403 with "account locked")
         if resp.status_code == 403:
-            try:
-                data = resp.json()
-            except Exception:
-                data = {}
-            if data.get("captcha_required") is True:
+            if resp.data.get("captcha_required") is True:
                 # Fetch a valid captcha token and retry ONCE.
                 captcha_token = self._fetch_captcha_token()
                 payload["captcha_token"] = captcha_token
@@ -80,12 +85,8 @@ class LoginClient:
                 return False
 
         if resp.status_code == 301:
-            try:
-                data = resp.json()
-            except Exception:
-                data = {}
             # check TOTP is enabled on server, /login returns 200 with message "move to /login_totp".
-            if isinstance(data, dict) and "login_totp" in str(data.get("status", "")):
+            if "login_totp" in str(resp.data.get("status", "")):
 
                 # Try one random TOTP - it should fail
                 token = pyotp.TOTP(pyotp.random_base32()).now()
