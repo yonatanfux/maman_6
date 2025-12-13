@@ -24,6 +24,8 @@ werkzeug_logger.setLevel(logging.ERROR)
 with open("config.json", 'r') as f:
     config = json.loads(f.read())
 
+attempts_file = open(config["ATTEMPTS_LOG"], "a", encoding="utf-8")
+
 defense_config, hash_mode = parse_args()
 sql_manager = SqlManager(config['DB_PATH'])
 hash_manager = ManageHash(config['DB_PATH'], hash_mode, config['GLOBAL_PEPPER'])
@@ -55,8 +57,8 @@ def log_attempt(group_seed, username, hash_mode, protection_flags, result, laten
         result,
         latency_ms
     ]
-    with open(config["ATTEMPTS_LOG"], "a", encoding="utf-8") as f:
-        f.write(",".join([str(i) for i in entry]) + "\n")
+
+    attempts_file.write(",".join([str(i) for i in entry]) + "\n")
 
 
 def rate_limit_key():
@@ -116,6 +118,11 @@ def captcha_required_for(username):
     if not username:
         return False
     return username["failed_attempts"] >= config["CAPTCHA_AFTER"]
+
+
+@app.teardown_appcontext
+def close_app():
+    attempts_file.close()
 
 
 @app.route("/register", methods=["POST"])
@@ -250,6 +257,9 @@ def get_captcha_token():
     current_captcha = token
     return jsonify({"captcha_token": token}), 200
 
+@app.route("/set_hashmode", methods=["POST"])
+def set_hashmode():
+    pass
 
 def main():
     logger.info(f"Running, defense_config={str(defense_config)}, {hash_mode=}")
