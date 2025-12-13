@@ -2,3 +2,4 @@ flask
 pyotp 
 bcrypt
 argon2-cffi
+requests
