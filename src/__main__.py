@@ -271,26 +271,43 @@ def parse_args():
         help="Defense mechanism to enable"
     )
 
+    parser.add_argument(
+        "--hash-mode",
+        required=True,
+        choices=[
+            "SHA_PLAIN",
+            "SHA_SALT",
+            "SHA_PEPPER",
+            "SHA_SALT_PEPPER",
+            "BCRYPT",
+            "BCRYPT_PEPPER",
+            "ARGON2",
+            "ARGON2_PEPPER"
+        ],
+        help="Hash mode to use"
+    )
+
     args = parser.parse_args()
 
-    cfg = DefenseConfig()
+    defense_cfg = DefenseConfig()
 
     if "no-defense" in args.defense:
-        cfg.no_defense = True
-        return cfg
+        defense_cfg.no_defense = True
+        return defense_cfg
 
-    cfg.totp = "totp" in args.defense
-    cfg.captcha = "captcha" in args.defense
-    cfg.rate_limit = "rate-limit" in args.defense
-    cfg.account_lock = "account_lock" in args.defense
+    defense_cfg.totp = "totp" in args.defense
+    defense_cfg.captcha = "captcha" in args.defense
+    defense_cfg.rate_limit = "rate-limit" in args.defense
+    defense_cfg.account_lock = "account_lock" in args.defense
 
-    return cfg
+    return defense_cfg, args.hash_mode
 
 
 def main():
-    global defense_config
-    defense_config = parse_args()
+    global defense_config, hash_mode
+    defense_config, hash_mode = parse_args()
     print(defense_config)
+    print(hash_mode)
     app.run(host="0.0.0.0", port=5000, debug=True)
 
 
