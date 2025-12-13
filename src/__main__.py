@@ -57,8 +57,8 @@ def add_user(username, password, input_salt=None):
 
 
 with open(config['USERS_PATH'], 'r', encoding='utf-8') as f:
-    for user in json.load(f):
-        res = add_user(user['username'], user['password'], user['salt'])
+    for user in json.load(f)["users"]:
+        res = add_user(user['username'], user['password'], user['sha_salt'])
 
 
 def log_attempt(group_seed, username, hash_mode, protection_flags, result, latency_ms):
