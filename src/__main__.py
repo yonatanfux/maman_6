@@ -49,10 +49,16 @@ class DefenseConfig:
 
 defense_config = DefenseConfig()
 
+
+def add_user(username, password, input_salt=None):
+    totp_secret = pyotp.random_base32()
+    salt, password_hash = hash_manager.create_hash_password(password, input_salt)
+    return sql_manager.insert_user(username, password_hash, salt, totp_secret)
+
+
 with open(config['USERS_PATH'], 'r', encoding='utf-8') as f:
     for user in json.load(f):
-        totp_secret = pyotp.random_base32()
-        res = hash_manager.add_user(user['username'], user['password'], totp_secret, user['salt'])
+        res = add_user(user['username'], user['password'], user['salt'])
 
 
 def log_attempt(group_seed, username, hash_mode, protection_flags, result, latency_ms):

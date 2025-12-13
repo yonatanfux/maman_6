@@ -25,6 +25,8 @@ Backup of *.doc*
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
+Scripts/
+pyvenv.cfg
 *.py[cod]
 *$py.class
 auth.db
