@@ -2,7 +2,12 @@ import json
 
 
 class DefenseConfig:
-    def __init__(self):
+    def __init__(self, data):
+        self.totp = "totp" in data
+        self.captcha = "captcha" in data
+        self.rate_limit = "rate-limit" in data
+        self.account_lock = "account_lock" in data
+
         self.no_defense = False
         self.totp = False
         self.captcha = False
