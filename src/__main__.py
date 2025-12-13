@@ -16,7 +16,7 @@ with open("config.json", 'r') as f:
 
 hash_mode = config["HASH_MODE"]
 
-sql_manager = SqlManager()
+sql_manager = SqlManager(consts.DB_PATH)
 
 app = Flask(__name__)
 
@@ -341,6 +341,7 @@ def parse_args():
 def main():
     global defense_config
     defense_config = parse_args()
+    print(defense_config)
     sql_manager.connect()
     app.run(host="0.0.0.0", port=5000, debug=True)
 

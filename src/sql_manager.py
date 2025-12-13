@@ -4,9 +4,9 @@ DB_PATH = "auth.db"
 
 
 class SqlManager:
-    def __init__(self, DB_PATH):
-        self._DB_PATH = DB_PATH
-        with sqlite3.connect(self._DB_PATH) as conn:
+    def __init__(self, db_path=DB_PATH):
+        self._db_path = db_path
+        with sqlite3.connect(self._db_path) as conn:
             c = self._db.cursor()
 
             c.executescript("""
@@ -26,7 +26,7 @@ class SqlManager:
     def insert_user(self, username: str, password_hash: str, salt: str = None, 
                     totp_secret: str = None, failed_attempts: int = 0, locked_until=None):
     
-        with sqlite3.connect(self._DB_PATH) as conn:
+        with sqlite3.connect(self._db_path) as conn:
             cursor = self._db.cursor()
 
             cursor.execute(
@@ -56,7 +56,7 @@ class SqlManager:
         if not fields:
             return False
 
-        with sqlite3.connect(self._DB_PATH) as conn:
+        with sqlite3.connect(self._db_path) as conn:
             cursor = conn.cursor()
 
             columns = ", ".join(f"{key} = ?" for key in fields.keys())
@@ -77,7 +77,7 @@ class SqlManager:
 
 
 def get_user_by_username(self, username: str) -> dict | None:
-    with sqlite3.connect(self._DB_PATH) as conn:
+    with sqlite3.connect(self._db_path) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
 
