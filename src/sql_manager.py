@@ -1,13 +1,10 @@
 import sqlite3
 
-DB_PATH = "auth.db"
-
-
 class SqlManager:
-    def __init__(self, DB_PATH):
-        self._DB_PATH = DB_PATH
-        with sqlite3.connect(self._DB_PATH) as conn:
-            c = self._db.cursor()
+    def __init__(self, db_path):
+        self._db_path = db_path
+        with sqlite3.connect(self._db_path) as conn:
+            c = conn.cursor()
 
             c.executescript("""
             CREATE TABLE IF NOT EXISTS users (
@@ -22,12 +19,10 @@ class SqlManager:
             );
             """)
 
-
-    def insert_user(self, username: str, password_hash: str, salt: str = None, 
+    def insert_user(self, username: str, password_hash: str, salt: str = None,
                     totp_secret: str = None, failed_attempts: int = 0, locked_until=None):
-    
-        with sqlite3.connect(self._DB_PATH) as conn:
-            cursor = self._db.cursor()
+        with sqlite3.connect(self._db_path) as conn:
+            cursor = conn.cursor()
 
             cursor.execute(
                 """
@@ -51,12 +46,11 @@ class SqlManager:
                 )
             )
 
-
     def update_user_by_username(self, username: str, **fields):
         if not fields:
             return False
 
-        with sqlite3.connect(self._DB_PATH) as conn:
+        with sqlite3.connect(self._db_path) as conn:
             cursor = conn.cursor()
 
             columns = ", ".join(f"{key} = ?" for key in fields.keys())
@@ -77,7 +71,7 @@ class SqlManager:
 
 
 def get_user_by_username(self, username: str) -> dict | None:
-    with sqlite3.connect(self._DB_PATH) as conn:
+    with sqlite3.connect(self._db_path) as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
 
@@ -97,4 +91,3 @@ def get_user_by_username(self, username: str) -> dict | None:
             return None
 
         return dict(row)
-
