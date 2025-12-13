@@ -79,32 +79,40 @@ class LoginClient:
                 print(f"Login blocked (403): {resp.text}")
                 return False
 
-        if resp.status_code != 200:
+        if resp.status_code == 301:
+            try:
+                data = resp.json()
+            except Exception:
+                data = {}
+            # check TOTP is enabled on server, /login returns 200 with message "move to /login_totp".
+            if isinstance(data, dict) and "login_totp" in str(data.get("status", "")):
+
+                # Try one random TOTP - it should fail
+                token = pyotp.TOTP(pyotp.random_base32()).now()
+
+                resp2 = self._post_json("/login_totp", {
+                    "username": username,
+                    "totp_token": token,
+                    "group_seed": self.group_seed,
+                })
+
+                if resp2.status_code == 200:
+                    print("TOTP step success.")
+                    return True
+                else:
+                    print(f"TOTP step failed: {resp2.status_code} {resp2.text}")
+                    return False
+        
+        # Otherwise, 200 on /login is full success.
+        if resp.status_code == 200:
+            print("Login success.")
+            return True
+        
+        # Something else wrong
+        else:
             print(f"Login failed: {resp.status_code} {resp.text}")
             return False
-
-        # If TOTP is enabled on server, /login returns 200 with message "move to /login_totp".
-        if isinstance(data, dict) and "login_totp" in str(data.get("status", "")):
-
-            # Try one random TOTP - it should fail
-            token = pyotp.TOTP(pyotp.random_base32()).now()
-
-            resp2 = self._post_json("/login_totp", {
-                "username": username,
-                "totp_token": token,
-                "group_seed": self.group_seed,
-            })
-
-            if resp2.status_code == 200:
-                print("TOTP step success.")
-                return True
-            else:
-                print(f"TOTP step failed: {resp2.status_code} {resp2.text}")
-                return False
-
-        # Otherwise, 200 on /login is full success.
-        print("Login success.")
-        return True
+        
 
 
 def main() -> int:
