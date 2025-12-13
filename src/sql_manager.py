@@ -7,7 +7,7 @@ class SqlManager:
     def __init__(self, db_path=DB_PATH):
         self._db_path = db_path
         with sqlite3.connect(self._db_path) as conn:
-            c = self._db.cursor()
+            c = conn.cursor()
 
             c.executescript("""
             CREATE TABLE IF NOT EXISTS users (
@@ -22,12 +22,10 @@ class SqlManager:
             );
             """)
 
-
-    def insert_user(self, username: str, password_hash: str, salt: str = None, 
+    def insert_user(self, username: str, password_hash: str, salt: str = None,
                     totp_secret: str = None, failed_attempts: int = 0, locked_until=None):
-    
         with sqlite3.connect(self._db_path) as conn:
-            cursor = self._db.cursor()
+            cursor = conn.cursor()
 
             cursor.execute(
                 """
@@ -50,7 +48,6 @@ class SqlManager:
                     locked_until
                 )
             )
-
 
     def update_user_by_username(self, username: str, **fields):
         if not fields:
@@ -97,4 +94,3 @@ def get_user_by_username(self, username: str) -> dict | None:
             return None
 
         return dict(row)
-

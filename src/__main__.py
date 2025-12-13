@@ -16,7 +16,7 @@ with open("config.json", 'r') as f:
 
 hash_mode = config["HASH_MODE"]
 
-sql_manager = SqlManager(consts.DB_PATH)
+sql_manager = SqlManager()
 
 app = Flask(__name__)
 
@@ -41,13 +41,17 @@ class DefenseConfig:
             if i
         ]
 
+    def __str__(self):
+        return json.dumps({
+            "no_defense": self.no_defense,
+            "totp": self.totp,
+            "captcha": self.captcha,
+            "rate_limit": self.rate_limit,
+            "account_lock": self.account_lock
+        })
+
 
 defense_config = DefenseConfig()
-
-
-@app.teardown_appcontext
-def close_connection():
-    sql_manager.close()
 
 
 def log_attempt(group_seed, username, hash_mode, protection_flags, result, latency_ms):
@@ -310,6 +314,7 @@ def parse_args():
     parser.add_argument(
         "--defense",
         required=True,
+        nargs="+",
         choices=[
             "no-defense",
             "totp",
@@ -324,16 +329,14 @@ def parse_args():
 
     cfg = DefenseConfig()
 
-    if args.defense == "no-defense":
+    if "no-defense" in args.defense:
         cfg.no_defense = True
-    elif args.defense == "totp":
-        cfg.totp = True
-    elif args.defense == "captcha":
-        cfg.captcha = True
-    elif args.defense == "rate-limit":
-        cfg.rate_limit = True
-    elif args.defense == "account_lock":
-        cfg.account_lock = True
+        return cfg
+
+    cfg.totp = "totp" in args.defense
+    cfg.captcha = "captcha" in args.defense
+    cfg.rate_limit = "rate-limit" in args.defense
+    cfg.account_lock = "account_lock" in args.defense
 
     return cfg
 
@@ -342,7 +345,6 @@ def main():
     global defense_config
     defense_config = parse_args()
     print(defense_config)
-    sql_manager.connect()
     app.run(host="0.0.0.0", port=5000, debug=True)
 
 
