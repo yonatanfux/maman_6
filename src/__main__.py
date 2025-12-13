@@ -50,10 +50,16 @@ class DefenseConfig:
 
 defense_config = DefenseConfig()
 
+
+def add_user(username, password, input_salt=None):
+    totp_secret = pyotp.random_base32()
+    salt, password_hash = hash_manager.create_hash_password(password, input_salt)
+    return sql_manager.insert_user(username, password_hash, salt, totp_secret)
+
+
 with open(config['USERS_PATH'], 'r', encoding='utf-8') as f:
     for user in json.load(f):
-        totp_secret = pyotp.random_base32()
-        res = hash_manager.add_user(user['username'], user['password'], totp_secret, user['salt'])
+        res = add_user(user['username'], user['password'], user['salt'])
 
 
 def log_attempt(group_seed, username, hash_mode, protection_flags, result, latency_ms):
@@ -150,12 +156,11 @@ def register():
     if not username or not password:
         return jsonify({"error": "username and password required"}), 400
 
-    totp_secret = pyotp.random_base32()
-    res = hash_manager.add_user(username, password, totp_secret)
+    res = add_user(username, password)
     if res:
         latency_ms = int((time.time() - start) * 1000)
         log_attempt(group_seed, username, hash_mode, ["register"], "success", latency_ms)
-        return jsonify({"status": "registered", "totp_secret": totp_secret}), 201
+        return jsonify({"status": "registered"}), 201
     else:
         latency_ms = int((time.time() - start) * 1000)
         log_attempt(group_seed, username, hash_mode, ["register"], "failure", latency_ms)
@@ -201,7 +206,12 @@ def login():
                             latency_ms)
                 return jsonify({"captcha_required": True}), 403
 
-    ok = hash_manager.login(username, password)
+    # Test login's password
+    user = sql_manager.get_user_by_username(username)
+    if user is None:
+        return jsonify({"status": "no such user exists"}), 404
+    ok = hash_manager.check_hash(user['password_hash'], password, user['salt'])
+
     latency_ms = int((time.time() - start) * 1000)
     if ok:
         reset_failed(username)
