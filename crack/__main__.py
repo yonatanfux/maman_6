@@ -6,18 +6,9 @@ from src.server import Server
 group_seed = 413134
 
 def generate_medium_password():
-    
-    # generate word    
-    word = ''.join(secrets.choice(string.ascii_lowercase) for _ in range((secrets.randbelow(17) - 3)))
-
-    # randomly capitalize or not
-    if secrets.choice([True, False]):
-        word = word.capitalize()
-
+    letters = ''.join(secrets.choice(string.ascii_lowercase) for _ in range(3))
     digits = ''.join(secrets.choice(string.digits) for _ in range(2))
-    symbol = secrets.choice("!@#$%^&*")
-
-    return word + digits + symbol
+    return letters + digits
 
 
 def generate_strong_password(min_len=2, max_len=16):
@@ -31,7 +22,7 @@ with open('crack/popular_passwords.txt', 'r') as f:
         weak_passwords.append(line.strip())
 
 
-def build_password_map(med_amount = 20000, strong_amount=20000):
+def build_password_map(med_amount = 300000, strong_amount=100000):
     passwords = []
     with open('crack/popular_passwords.txt', 'r') as f:
         for line in f:
