@@ -1,6 +1,7 @@
 {
   "HASH_MODE": "argon2",
   "DB_PATH": "auth.db",
+  "USERS_PATH": "users.json",
   "ATTEMPTS_LOG": "attempts.log",
   "GROUP_SEED": 413134,
   "GLOBAL_PEPPER": "0urG10bAlP3PPer",

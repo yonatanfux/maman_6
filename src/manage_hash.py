@@ -1,4 +1,3 @@
-import json
 from src import hash_utils
 from src.sql_manager import SqlManager
 
@@ -9,12 +8,6 @@ class ManageHash(object):
         self._sql = SqlManager(db_path)
         self._mode = mode
         self._PEPPER = pepper
-
-    def load_users(self, path):
-
-        with open(path, "r", encoding="utf-8") as f:
-            for user in json.load(f):
-                self.add_user(user['username'], user['password'], user['salt'])
 
     def _hash(self, password, salt, pepper):
         if self._mode == 'SHA_PLAIN':

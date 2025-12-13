@@ -18,6 +18,7 @@ class SqlManager:
                 locked_until TIMESTAMP DEFAULT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+            DELETE FROM users;
             """)
 
     def insert_user(self, username: str, password_hash: str, salt: str = None,

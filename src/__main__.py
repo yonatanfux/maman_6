@@ -33,10 +33,7 @@ class DefenseConfig:
 
     def to_protection_flags(self):
         return [
-            i for i in
-            [
-                self.no_defense, self.totp, self.captcha, self.rate_limit, self.account_lock
-            ]
+            i for i in [self.no_defense, self.totp, self.captcha, self.rate_limit, self.account_lock]
             if i
         ]
 
@@ -51,6 +48,11 @@ class DefenseConfig:
 
 
 defense_config = DefenseConfig()
+
+with open(config['USERS_PATH'], 'r', encoding='utf-8') as f:
+    for user in json.load(f):
+        totp_secret = pyotp.random_base32()
+        res = hash_manager.add_user(user['username'], user['password'], totp_secret, user['salt'])
 
 
 def log_attempt(group_seed, username, hash_mode, protection_flags, result, latency_ms):
