@@ -10,10 +10,16 @@ class DefenseConfig:
         self.account_lock = False
 
     def to_protection_flags(self):
-        return [
-            i for i in [self.no_defense, self.totp, self.captcha, self.rate_limit, self.account_lock]
-            if i
-        ]
+        if self.no_defense:
+            return "no_defense"
+        if self.totp:
+            return "totp"
+        if self.captcha:
+            return "captcha"
+        if self.rate_limit:
+            return "rate_limit"
+        if self.account_lock:
+            return "account_lock"
 
     def __str__(self):
         return json.dumps({

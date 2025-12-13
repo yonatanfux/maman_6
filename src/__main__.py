@@ -2,6 +2,7 @@ import time
 import json
 import secrets
 import pyotp
+import logging
 
 from datetime import datetime, timedelta, timezone
 from flask import Flask, request, jsonify
@@ -9,6 +10,13 @@ from flask import Flask, request, jsonify
 from src.sql_manager import SqlManager
 from src.manage_hash import ManageHash
 from src.args import parse_args
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+
+logger = logging.getLogger(__name__)
 
 with open("config.json", 'r') as f:
     config = json.loads(f.read())
@@ -23,30 +31,6 @@ failed_counters = dict()
 current_captcha = secrets.token_urlsafe(16)
 
 
-class DefenseConfig:
-    def __init__(self):
-        self.no_defense = False
-        self.totp = False
-        self.captcha = False
-        self.rate_limit = False
-        self.account_lock = False
-
-    def to_protection_flags(self):
-        return [
-            i for i in [self.no_defense, self.totp, self.captcha, self.rate_limit, self.account_lock]
-            if i
-        ]
-
-    def __str__(self):
-        return json.dumps({
-            "no_defense": self.no_defense,
-            "totp": self.totp,
-            "captcha": self.captcha,
-            "rate_limit": self.rate_limit,
-            "account_lock": self.account_lock
-        })
-
-
 def add_user(username, password, input_salt=None):
     totp_secret = pyotp.random_base32()
     salt, password_hash = hash_manager.create_hash_password(password, input_salt)
@@ -59,15 +43,6 @@ with open(config['USERS_PATH'], 'r', encoding='utf-8') as f:
 
 
 def log_attempt(group_seed, username, hash_mode, protection_flags, result, latency_ms):
-    # entry = {
-    #     "timestamp": datetime.utcnow().isoformat() + "Z",
-    #     "group_seed": group_seed,
-    #     "username": username,
-    #     "hash_mode": hash_mode,
-    #     "protection_flags": protection_flags,
-    #     "result": result,
-    #     "latency_ms": latency_ms
-    # }
     entry = [
         datetime.now(timezone.utc).isoformat() + "Z",
         group_seed,
@@ -77,9 +52,8 @@ def log_attempt(group_seed, username, hash_mode, protection_flags, result, laten
         result,
         latency_ms
     ]
-
     with open(config["ATTEMPTS_LOG"], "a", encoding="utf-8") as f:
-        f.write(",".join(entry))
+        f.write(",".join([str(i) for i in entry]) + "\n")
 
 
 def rate_limit_key():
@@ -181,7 +155,7 @@ def login():
 
     row = sql_manager.get_user_by_username(username)
     if not row:
-        return jsonify({"error": "user does not exist"}), 401
+        return jsonify({"error": "user does not exist"}), 404
 
     if defense_config.account_lock:
         if is_locked(username):
@@ -211,7 +185,7 @@ def login():
         reset_failed(username)
         if defense_config.totp:
             log_attempt(group_seed, username, hash_mode, protection_flags, "partial_success", latency_ms)
-            return jsonify({"status": "ok, move to /login_totp"}), 200
+            return jsonify({"status": "ok, move to /login_totp"}), 301
         else:
             log_attempt(group_seed, username, hash_mode, protection_flags, "success", latency_ms)
             return jsonify({"status": "ok"}), 200
@@ -275,6 +249,7 @@ def get_captcha_token():
 
 
 def main():
+    logger.info(f"Running, defense_config={str(defense_config)}, {hash_mode=}")
     app.run(host="0.0.0.0", port=5000, debug=True)
 
 
