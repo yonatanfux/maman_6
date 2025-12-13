@@ -18,6 +18,8 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+werkzeug_logger = logging.getLogger('werkzeug')
+werkzeug_logger.setLevel(logging.ERROR)
 
 with open("config.json", 'r') as f:
     config = json.loads(f.read())
@@ -251,7 +253,7 @@ def get_captcha_token():
 
 def main():
     logger.info(f"Running, defense_config={str(defense_config)}, {hash_mode=}")
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=False)
 
 
 if __name__ == "__main__":
