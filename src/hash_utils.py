@@ -4,11 +4,9 @@ import bcrypt
 import base64
 import random 
 import string
-
 from argon2 import PasswordHasher
 
 argon2_hasher = PasswordHasher(time_cost=1, memory_cost=65536, parallelism=1)
-
 BCRYPT_COST = 12
 
 def random_salt(length=8):
