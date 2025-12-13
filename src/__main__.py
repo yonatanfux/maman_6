@@ -19,8 +19,9 @@ sql_manager = SqlManager(config['DB_PATH'])
 hash_manager = ManageHash(config['DB_PATH'], hash_mode, config['GLOBAL_PEPPER'])
 app = Flask(__name__)
 
-rate_counters = {}
-failed_counters = {}
+rate_counters = dict()
+failed_counters = dict()
+current_captcha = secrets.token_urlsafe(16)
 
 
 class DefenseConfig:
@@ -121,15 +122,16 @@ def register_failed(username):
         if fails >= config["LOCKOUT_THRESHOLD"]:
             lock_until = (datetime.now(timezone.utc) + timedelta(seconds=config["LOCKOUT_SECONDS"])).isoformat()
             fails = 0
-        
+
         sql_manager.update_user_by_username(username, failed_attempts=fails, locked_until=lock_until)
 
 
 def reset_failed(username):
     sql_manager.update_user_by_username(username, failed_attempts=0, locked_until=None)
 
+
 def captcha_required_for(username):
-    user = sql_manager.get_user_by_username(username)
+    username = sql_manager.get_user_by_username(username)
     if not username:
         return False
     return username["failed_attempts"] >= config["CAPTCHA_AFTER"]
@@ -188,10 +190,14 @@ def login():
 
     if defense_config.captcha:
         if captcha_required_for(username):
-            latency_ms = int((time.time() - start) * 1000)
-            log_attempt(group_seed, username, hash_mode, protection_flags, "captcha_required",
-                        latency_ms)
-            return jsonify({"captcha_required": True}), 403
+            captcha_token = data.get("captcha_token", None)
+            if captcha_token == current_captcha:
+                reset_failed(username)
+            else:
+                latency_ms = int((time.time() - start) * 1000)
+                log_attempt(group_seed, username, hash_mode, protection_flags, "captcha_required",
+                            latency_ms)
+                return jsonify({"captcha_required": True}), 403
 
     ok = hash_manager.login(username, password)
     latency_ms = int((time.time() - start) * 1000)
@@ -245,10 +251,12 @@ def login_totp():
 
 @app.route("/admin/get_captcha_token", methods=["GET"])
 def get_captcha_token():
+    global current_captcha
     group_seed = request.args.get("group_seed", "")
     if group_seed != config['GROUP_SEED']:
         return jsonify({"error": "unauthorized"}), 403
     token = secrets.token_urlsafe(16)
+    current_captcha = token
     return jsonify({"captcha_token": token}), 200
 
 
