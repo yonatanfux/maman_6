@@ -2,6 +2,7 @@ import time
 import json
 import secrets
 import pyotp
+import argparse
 
 from datetime import datetime, timedelta
 from flask import Flask, request, jsonify
@@ -21,6 +22,27 @@ app = Flask(__name__)
 
 rate_counters = {}
 failed_counters = {}
+
+
+class DefenseConfig:
+    def __init__(self):
+        self.no_defense = False
+        self.totp = False
+        self.captcha = False
+        self.rate_limit = False
+        self.account_lock = False
+
+    def to_protection_flags(self):
+        return [
+            i for i in
+            [
+                self.no_defense, self.totp, self.captcha, self.rate_limit, self.account_lock
+            ]
+            if i
+        ]
+
+
+defense_config = DefenseConfig()
 
 
 @app.teardown_appcontext
@@ -167,11 +189,13 @@ def login():
     password = data.get("password")
     group_seed = data.get("group_seed", consts.GROUP_SEED)
 
-    protection_flags = []
-    if check_rate_limit():
-        latency_ms = int((time.time() - start) * 1000)
-        log_attempt(group_seed, username, None, ["rate_limit"], "failure", latency_ms)
-        return jsonify({"error": "rate limit exceeded"}), 429
+    protection_flags = defense_config.to_protection_flags()
+
+    if defense_config.rate_limit:
+        if check_rate_limit():
+            latency_ms = int((time.time() - start) * 1000)
+            log_attempt(group_seed, username, None, ["rate_limit"], "failure", latency_ms)
+            return jsonify({"error": "rate limit exceeded"}), 429
 
     db = sql_manager.get_db()
     c = db.cursor()
@@ -182,16 +206,18 @@ def login():
         log_attempt(group_seed, username, None, protection_flags, "failure", latency_ms)
         return jsonify({"error": "invalid credentials"}), 401
 
-    if is_locked(username):
-        latency_ms = int((time.time() - start) * 1000)
-        log_attempt(group_seed, username, hash_mode, protection_flags + ["locked"], "locked", latency_ms)
-        return jsonify({"error": "account locked"}), 403
+    if defense_config.account_lock:
+        if is_locked(username):
+            latency_ms = int((time.time() - start) * 1000)
+            log_attempt(group_seed, username, hash_mode, protection_flags, "locked", latency_ms)
+            return jsonify({"error": "account locked"}), 403
 
-    if captcha_required_for(username):
-        latency_ms = int((time.time() - start) * 1000)
-        log_attempt(group_seed, username, hash_mode, protection_flags + ["captcha_needed"], "captcha_required",
-                    latency_ms)
-        return jsonify({"captcha_required": True}), 403
+    if defense_config.captcha:
+        if captcha_required_for(username):
+            latency_ms = int((time.time() - start) * 1000)
+            log_attempt(group_seed, username, hash_mode, protection_flags, "captcha_required",
+                        latency_ms)
+            return jsonify({"captcha_required": True}), 403
 
     stored_hash = row["password_hash"]
     salt = row["salt"]
@@ -225,13 +251,15 @@ def login():
 
 @app.route("/login_totp", methods=["POST"])
 def login_totp():
+    if not defense_config.totp:
+        return jsonify({"error": "totp isn't configured in server"}), 405
     start = time.time()
     data = request.get_json() or {}
     username = data.get("username")
     totp_token = data.get("totp_token")
     group_seed = data.get("group_seed", consts.GROUP_SEED)
 
-    protection_flags = ["totp"]
+    protection_flags = defense_config.to_protection_flags()
     db = sql_manager.get_db()
     c = db.cursor()
     c.execute("SELECT totp_secret FROM users WHERE username = ?", (username,))
@@ -267,6 +295,45 @@ def get_captcha_token():
     return jsonify({"captcha_token": token}), 200
 
 
-if __name__ == "__main__":
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--defense",
+        required=True,
+        choices=[
+            "no-defense",
+            "totp",
+            "captcha",
+            "rate-limit",
+            "account_lock",
+        ],
+        help="Defense mechanism to enable"
+    )
+
+    args = parser.parse_args()
+
+    cfg = DefenseConfig()
+
+    if args.defense == "no-defense":
+        cfg.no_defense = True
+    elif args.defense == "totp":
+        cfg.totp = True
+    elif args.defense == "captcha":
+        cfg.captcha = True
+    elif args.defense == "rate-limit":
+        cfg.rate_limit = True
+    elif args.defense == "account_lock":
+        cfg.account_lock = True
+
+    return cfg
+
+
+def main():
+    global defense_config
+    defense_config = parse_args()
     sql_manager.connect()
     app.run(host="0.0.0.0", port=5000, debug=True)
+
+
+if __name__ == "__main__":
+    main()
