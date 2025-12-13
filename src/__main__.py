@@ -260,6 +260,14 @@ def login_totp():
         return jsonify({"error": "invalid totp"}), 401
 
 
+@app.route("/get_base_totp", methods=["GET"])
+def get_base_totp():
+    data = request.get_json() or {}
+    username = data.get("username")
+    user = sql_manager.get_user_by_username(username)
+    return jsonify({"base_totp": user["totp_secret"]}), 200
+
+
 @app.route("/admin/get_captcha_token", methods=["GET"])
 def get_captcha_token():
     global current_captcha

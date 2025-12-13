@@ -71,25 +71,24 @@ class SqlManager:
             updated = cursor.rowcount > 0
             return updated
 
+    def get_user_by_username(self, username: str) -> dict | None:
+        with sqlite3.connect(self._db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
 
-def get_user_by_username(self, username: str) -> dict | None:
-    with sqlite3.connect(self._db_path) as conn:
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT *
+                FROM users
+                WHERE username = ?
+                LIMIT 1
+                """,
+                (username,)
+            )
 
-        cursor.execute(
-            """
-            SELECT *
-            FROM users
-            WHERE username = ?
-            LIMIT 1
-            """,
-            (username,)
-        )
+            row = cursor.fetchone()
 
-        row = cursor.fetchone()
+            if row is None:
+                return None
 
-        if row is None:
-            return None
-
-        return dict(row)
+            return dict(row)
