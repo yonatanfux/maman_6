@@ -10,9 +10,6 @@ from flask import Flask, request, jsonify
 from src.sql_manager import SqlManager
 from src.manage_hash import ManageHash
 
-from src import consts
-from src.hash_utils import *
-
 with open("config.json", 'r') as f:
     config = json.loads(f.read())
 
@@ -67,7 +64,7 @@ def log_attempt(group_seed, username, hash_mode, protection_flags, result, laten
     #     "latency_ms": latency_ms
     # }
     entry = [
-        datetime.utcnow().isoformat() + "Z",
+        datetime.now(timezone.utc).isoformat() + "Z",
         group_seed,
         username,
         hash_mode,
@@ -144,7 +141,7 @@ def register():
     data = request.get_json() or {}
     username = data.get("username")
     password = data.get("password")
-    group_seed = data.get("group_seed", consts.GROUP_SEED)
+    group_seed = data.get("group_seed", config['GROUP_SEED'])
 
     if not username or not password:
         return jsonify({"error": "username and password required"}), 400
@@ -167,7 +164,7 @@ def login():
     data = request.get_json() or {}
     username = data.get("username")
     password = data.get("password")
-    group_seed = data.get("group_seed", consts.GROUP_SEED)
+    group_seed = data.get("group_seed", config['GROUP_SEED'])
 
     protection_flags = defense_config.to_protection_flags()
 
@@ -220,7 +217,7 @@ def login_totp():
     data = request.get_json() or {}
     username = data.get("username")
     totp_token = data.get("totp_token")
-    group_seed = data.get("group_seed", consts.GROUP_SEED)
+    group_seed = data.get("group_seed", config['GROUP_SEED'])
 
     protection_flags = defense_config.to_protection_flags()
     user = sql_manager.get_user_by_username(username)
@@ -249,7 +246,7 @@ def login_totp():
 @app.route("/admin/get_captcha_token", methods=["GET"])
 def get_captcha_token():
     group_seed = request.args.get("group_seed", "")
-    if group_seed != consts.GROUP_SEED:
+    if group_seed != config['GROUP_SEED']:
         return jsonify({"error": "unauthorized"}), 403
     token = secrets.token_urlsafe(16)
     return jsonify({"captcha_token": token}), 200
