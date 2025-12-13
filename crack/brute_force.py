@@ -1,12 +1,9 @@
 from client import LoginClient
 import secrets
 import string
-
+from src.server import Server
 
 group_seed = 413134
-#base_url = 'http://192.168.1.103:5000'
-base_url = 'http://127.0.0.1:5000'
-
 
 def generate_medium_password():
     
@@ -47,9 +44,9 @@ def build_password_map(med_amount = 20000, strong_amount=20000):
     return passwords
 
 
-def iterate_over_user(username, passwords):
+def iterate_over_user(username, passwords, server):
     counter = 0
-    client = LoginClient(base_url, group_seed)
+    client = LoginClient(server, group_seed)
 
     for password in passwords:
         if client.attempt_login_once(username, password):
@@ -62,6 +59,7 @@ def iterate_over_user(username, passwords):
 
 
 passwords = build_password_map()
+server = Server('no-defense', 'SHA_PLAIN')
 
 for i in range(1, 30+1, 1):
     level = int(i / 10)
@@ -77,5 +75,5 @@ for i in range(1, 30+1, 1):
 
     
     print(f"iterating over {username}...")
-    iterate_over_user(username, passwords)
+    iterate_over_user(username, passwords, server)
 

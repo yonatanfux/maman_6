@@ -2,7 +2,7 @@ from src import hash_utils
 
 class ManageHash(object):
 
-    def __init__(self, db_path, mode, pepper):
+    def __init__(self, mode, pepper):
         self._mode = mode
         self._PEPPER = ''
         if self._mode in ['SHA_PEPPER', 'SHA_SALT_PEPPER', 'BCRYPT_PEPPER', 'ARGON2_PEPPER']:
