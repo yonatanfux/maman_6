@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__account_lock__sha_pepper.log",
+  "total_attempts": 5564,
+  "attempts_per_second": 5.29792827276215,
+  "time_to_first_success_ms": 0.062,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 1887.530273184759,
+  "weak_worst_seconds": 3775.060546369518,
+  "medium_expected_seconds": 165876.16040747662,
+  "medium_worst_seconds": 331752.32081495324,
+  "strong_expected_seconds": 4.5729120427236224e+27,
+  "strong_worst_seconds": 9.145824085447245e+27
+}

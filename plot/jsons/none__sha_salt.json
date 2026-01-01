@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__none__sha_salt.log",
+  "total_attempts": 32387320,
+  "attempts_per_second": 107794.92993202413,
+  "time_to_first_success_ms": 0.07200000000000001,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 4,
+  "medium_success_rate": 0.4,
+  "strong_total_users": 10,
+  "strong_successful_users": 5,
+  "strong_success_rate": 0.5,
+  "weak_expected_seconds": 0.09276874159393245,
+  "weak_worst_seconds": 0.1855374831878649,
+  "medium_expected_seconds": 8.152517011274783,
+  "medium_worst_seconds": 16.305034022549567,
+  "strong_expected_seconds": 2.2475045918465375e+23,
+  "strong_worst_seconds": 4.495009183693075e+23
+}

@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__rainbow__captcha__bcrypt.log",
+  "total_attempts": 167,
+  "attempts_per_second": 3.720971188631493,
+  "time_to_first_success_ms": 28975.928,
+  "weak_total_users": 10,
+  "weak_successful_users": 3,
+  "weak_success_rate": 0.3,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 2687.4704191616765,
+  "weak_worst_seconds": 5374.940838323353,
+  "medium_expected_seconds": 236174.9004359281,
+  "medium_worst_seconds": 472349.8008718562,
+  "strong_expected_seconds": 6.510923834621316e+27,
+  "strong_worst_seconds": 1.3021847669242632e+28
+}

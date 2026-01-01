@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__captcha__sha_pepper.log",
+  "total_attempts": 5585,
+  "attempts_per_second": 5.566326888106851,
+  "time_to_first_success_ms": 0.312,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 1796.5168415398389,
+  "weak_worst_seconds": 3593.0336830796778,
+  "medium_expected_seconds": 157877.90003452104,
+  "medium_worst_seconds": 315755.8000690421,
+  "strong_expected_seconds": 4.352414165931201e+27,
+  "strong_worst_seconds": 8.704828331862402e+27
+}

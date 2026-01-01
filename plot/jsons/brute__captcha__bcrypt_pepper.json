@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__captcha__bcrypt_pepper.log",
+  "total_attempts": 2018,
+  "attempts_per_second": 1.8261537947578566,
+  "time_to_first_success_ms": 4218.1410000000005,
+  "weak_total_users": 10,
+  "weak_successful_users": 7,
+  "weak_success_rate": 0.7,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 5475.990044598612,
+  "weak_worst_seconds": 10951.980089197225,
+  "medium_expected_seconds": 481230.00511932606,
+  "medium_worst_seconds": 962460.0102386521,
+  "strong_expected_seconds": 1.326665917708888e+28,
+  "strong_worst_seconds": 2.653331835417776e+28
+}

@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__rainbow__rate_limit__sha_salt_pepper.log",
+  "total_attempts": 301,
+  "attempts_per_second": 81307.40140464614,
+  "time_to_first_success_ms": 0.9430000000000001,
+  "weak_total_users": 10,
+  "weak_successful_users": 6,
+  "weak_success_rate": 0.6,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 0.12299003322259136,
+  "weak_worst_seconds": 0.24598006644518272,
+  "medium_expected_seconds": 10.808364119601329,
+  "medium_worst_seconds": 21.616728239202658,
+  "strong_expected_seconds": 2.9796746152823917e+23,
+  "strong_worst_seconds": 5.9593492305647834e+23
+}

@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__captcha__sha_salt.log",
+  "total_attempts": 5585,
+  "attempts_per_second": 5.566330893560836,
+  "time_to_first_success_ms": 0.5109999999999999,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 1796.5155487914055,
+  "weak_worst_seconds": 3593.031097582811,
+  "medium_expected_seconds": 157877.78642778873,
+  "medium_worst_seconds": 315755.57285557745,
+  "strong_expected_seconds": 4.352411033994743e+27,
+  "strong_worst_seconds": 8.704822067989486e+27
+}

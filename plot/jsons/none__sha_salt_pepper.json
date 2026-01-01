@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__none__sha_salt_pepper.log",
+  "total_attempts": 32387320,
+  "attempts_per_second": 119811.022369755,
+  "time_to_first_success_ms": 0.09000000000000001,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 4,
+  "medium_success_rate": 0.4,
+  "strong_total_users": 10,
+  "strong_successful_users": 5,
+  "strong_success_rate": 0.5,
+  "weak_expected_seconds": 0.0834647747945801,
+  "weak_worst_seconds": 0.1669295495891602,
+  "medium_expected_seconds": 7.334884408947699,
+  "medium_worst_seconds": 14.669768817895399,
+  "strong_expected_seconds": 2.0220977603573002e+23,
+  "strong_worst_seconds": 4.0441955207146005e+23
+}

@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__totp__argon2.log",
+  "total_attempts": 16875,
+  "attempts_per_second": 18.16298366922278,
+  "time_to_first_success_ms": 420.03000000000003,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 550.5703348148148,
+  "weak_worst_seconds": 1101.1406696296297,
+  "medium_expected_seconds": 48384.12102352593,
+  "medium_worst_seconds": 96768.24204705186,
+  "strong_expected_seconds": 1.3338645478745125e+27,
+  "strong_worst_seconds": 2.667729095749025e+27
+}

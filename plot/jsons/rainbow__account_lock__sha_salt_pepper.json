@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__rainbow__account_lock__sha_salt_pepper.log",
+  "total_attempts": 1363,
+  "attempts_per_second": 34.06136693788311,
+  "time_to_first_success_ms": 0.992,
+  "weak_total_users": 10,
+  "weak_successful_users": 6,
+  "weak_success_rate": 0.6,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 293.58774761555395,
+  "weak_worst_seconds": 587.1754952311079,
+  "medium_expected_seconds": 25800.49126045488,
+  "medium_worst_seconds": 51600.98252090976,
+  "strong_expected_seconds": 7.112738617972121e+26,
+  "strong_worst_seconds": 1.4225477235944242e+27
+}

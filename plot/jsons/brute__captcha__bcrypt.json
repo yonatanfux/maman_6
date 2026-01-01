@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__captcha__bcrypt.log",
+  "total_attempts": 2098,
+  "attempts_per_second": 1.8896334320820818,
+  "time_to_first_success_ms": 3484.1220000000003,
+  "weak_total_users": 10,
+  "weak_successful_users": 7,
+  "weak_success_rate": 0.7,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 5292.031687321259,
+  "weak_worst_seconds": 10584.063374642517,
+  "medium_expected_seconds": 465063.7446817922,
+  "medium_worst_seconds": 930127.4893635844,
+  "strong_expected_seconds": 1.2820984000746462e+28,
+  "strong_worst_seconds": 2.5641968001492924e+28
+}

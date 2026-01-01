@@ -1,8 +1,7 @@
-flask
 pyotp 
 bcrypt
 argon2-cffi
-requests
-fastapi
-uvicorn
 tqdm
+
+pandas
+matplotlib

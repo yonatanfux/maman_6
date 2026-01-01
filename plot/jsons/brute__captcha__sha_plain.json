@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__captcha__sha_plain.log",
+  "total_attempts": 5365,
+  "attempts_per_second": 4.063166216783664,
+  "time_to_first_success_ms": 0.114,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 2461.1348555452,
+  "weak_worst_seconds": 4922.2697110904,
+  "medium_expected_seconds": 216284.5311053122,
+  "medium_worst_seconds": 432569.0622106244,
+  "strong_expected_seconds": 5.962581569989934e+27,
+  "strong_worst_seconds": 1.1925163139979867e+28
+}

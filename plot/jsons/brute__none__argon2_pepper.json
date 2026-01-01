@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__none__argon2_pepper.log",
+  "total_attempts": 17428,
+  "attempts_per_second": 18.822817616557113,
+  "time_to_first_success_ms": 382.226,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 531.2700895111315,
+  "weak_worst_seconds": 1062.540179022263,
+  "medium_expected_seconds": 46688.015466238234,
+  "medium_worst_seconds": 93376.03093247647,
+  "strong_expected_seconds": 1.28710592077826e+27,
+  "strong_worst_seconds": 2.57421184155652e+27
+}

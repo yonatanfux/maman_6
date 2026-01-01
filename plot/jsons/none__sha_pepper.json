@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__none__sha_pepper.log",
+  "total_attempts": 32387320,
+  "attempts_per_second": 112876.78825490197,
+  "time_to_first_success_ms": 0.095,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 4,
+  "medium_success_rate": 0.4,
+  "strong_total_users": 10,
+  "strong_successful_users": 5,
+  "strong_success_rate": 0.5,
+  "weak_expected_seconds": 0.088592173418486,
+  "weak_worst_seconds": 0.177184346836972,
+  "medium_expected_seconds": 7.785480200016551,
+  "medium_worst_seconds": 15.570960400033101,
+  "strong_expected_seconds": 2.1463190417227238e+23,
+  "strong_worst_seconds": 4.2926380834454475e+23
+}

@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__rainbow__captcha__sha_salt_pepper.log",
+  "total_attempts": 358,
+  "attempts_per_second": 7.779462748564156,
+  "time_to_first_success_ms": 1.053,
+  "weak_total_users": 10,
+  "weak_successful_users": 6,
+  "weak_success_rate": 0.6,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 1285.435810055866,
+  "weak_worst_seconds": 2570.871620111732,
+  "medium_expected_seconds": 112964.09898770951,
+  "medium_worst_seconds": 225928.19797541903,
+  "strong_expected_seconds": 3.114220195279106e+27,
+  "strong_worst_seconds": 6.228440390558212e+27
+}

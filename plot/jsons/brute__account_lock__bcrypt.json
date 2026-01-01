@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__account_lock__bcrypt.log",
+  "total_attempts": 2605,
+  "attempts_per_second": 2.3649571797176234,
+  "time_to_first_success_ms": 1833.104,
+  "weak_total_users": 10,
+  "weak_successful_users": 9,
+  "weak_success_rate": 0.9,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 4228.4063685220735,
+  "weak_worst_seconds": 8456.812737044147,
+  "medium_expected_seconds": 371592.35166571976,
+  "medium_worst_seconds": 743184.7033314395,
+  "strong_expected_seconds": 1.024414319539295e+28,
+  "strong_worst_seconds": 2.04882863907859e+28
+}
