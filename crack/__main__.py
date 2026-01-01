@@ -50,7 +50,7 @@ def iterate_over_user(username, passwords, server):
 
 
 passwords = build_password_map()
-server = Server('no-defense', 'SHA_PLAIN')
+server = Server('totp', 'SHA_PLAIN')
 
 for i in range(1, 30+1, 1):
     level = int(i / 10)

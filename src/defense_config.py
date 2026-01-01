@@ -7,12 +7,7 @@ class DefenseConfig:
         self.captcha = "captcha" in data
         self.rate_limit = "rate-limit" in data
         self.account_lock = "account_lock" in data
-
         self.no_defense = False
-        self.totp = False
-        self.captcha = False
-        self.rate_limit = False
-        self.account_lock = False
 
     def to_protection_flags(self):
         if self.no_defense:
