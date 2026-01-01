@@ -93,7 +93,7 @@ class Server(object):
                 dt = datetime.fromisoformat(locked_until)
             except Exception:
                 return False
-            if dt > datetime.utcnow():
+            if dt > datetime.now(timezone.utc):
                 return True
         return False
 
@@ -103,7 +103,7 @@ class Server(object):
         if user:
             fails = user["failed_attempts"] + 1
             lock_until = None
-            if self._defense_config.account_lock and self.fails >= self._config["LOCKOUT_THRESHOLD"]:
+            if self._defense_config.account_lock and fails >= self._config["LOCKOUT_THRESHOLD"]:
                 lock_until = (datetime.now(timezone.utc) + timedelta(seconds=self._config["LOCKOUT_SECONDS"])).isoformat()
                 fails = 0
 

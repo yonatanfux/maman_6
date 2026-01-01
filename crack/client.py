@@ -55,8 +55,10 @@ class LoginClient:
                 captcha_token = self._fetch_captcha_token()
                 data, status_code = self.server.login(username, password, 
                                                       captcha_token=captcha_token, group_seed=self.group_seed)
+            # Else, means account is on lockout for X seconds
             else:
-                # print(f"Login blocked (403): {data}")
+                # print(f"Login locked (403): {data}")
+                time.sleep(10)
                 return False, '403'
 
         if status_code == 301:
