@@ -98,9 +98,10 @@ def iterate_over_passwords(usernames, passwords, client: LoginClient, timeout=45
     counter = 0
     start_time = time.monotonic()
 
+    active_usernames = set(usernames)
     pbar = tqdm(passwords, desc=f"Trying passwords on users", unit="attempt", dynamic_ncols=True)
     for password in pbar:
-        for username in usernames:
+        for username in active_usernames:
             # Check timeout
             if time.monotonic() - start_time >= timeout:
                 pbar.close()
@@ -111,11 +112,15 @@ def iterate_over_passwords(usernames, passwords, client: LoginClient, timeout=45
             if resp:
                 pbar.close()
                 tqdm.write(f"[counter: {counter}] [V] Success: {username} -> {password}")
-                return True
+                active_usernames.remove(username)
+                break
+
             elif not resp and status == 'totp_failed':
                 pbar.close()
                 tqdm.write(f"[counter: {counter}] [X] TOTP fail: password correct but TOTP code failed")
-                return False
+                active_usernames.remove(username)
+                break
+            
             else:
                 counter += 1
 
