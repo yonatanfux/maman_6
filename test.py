@@ -1,9 +1,13 @@
 import string
-import secrets
+import pyotp
+import json
 
-def generate_medium_password():
-    letters = ''.join(secrets.choice(string.ascii_lowercase) for _ in range(5))
-    digits = ''.join(secrets.choice(string.digits) for _ in range(2))
-    return letters + digits
+with open('users.json', 'r') as f:
+    data = json.load(f)
 
-print(generate_medium_password())
+for user in data['users']:
+    user['totp_secret'] = pyotp.random_base32()
+
+with open('users_new.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f, indent=4)
+print(data)

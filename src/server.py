@@ -41,13 +41,14 @@ class Server(object):
 
         with open(self._config['USERS_PATH'], 'r', encoding='utf-8') as f:
             for user in json.load(f)["users"]:
-                res = self.add_user(user['username'], user['password'], user['sha_salt'])
+                res = self.add_user(user['username'], user['password'], user['sha_salt'], user['totp_secret'])
 
         self._logger.info(f"Running, defense_config={str(defense_config)}, {hash_mode=}")
 
 
-    def add_user(self, username, password, input_salt=None):
-        totp_secret = pyotp.random_base32()
+    def add_user(self, username, password, input_salt=None, totp_secret=None):
+        if not totp_secret:
+            totp_secret = pyotp.random_base32()
         salt, password_hash = self._hash_manager.create_hash_password(password, input_salt)
         return self._sql_manager.insert_user(username, password_hash, salt, totp_secret)
 
