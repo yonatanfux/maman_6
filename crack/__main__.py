@@ -9,35 +9,23 @@ from src.server import Server
 
 group_seed = 413134
 
+defenses = ["no-defense", "totp", "captcha", "rate-limit", "account_lock"]
+hash_modes = ["SHA_PLAIN", "SHA_SALT", "SHA_PEPPER", "SHA_SALT_PEPPER", "BCRYPT", "BCRYPT_PEPPER", "ARGON2", "ARGON2_PEPPER"]
+
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument(
         "--defense",
         required=True,
         nargs="+",
-        choices=[
-            "no-defense",
-            "totp",
-            "captcha",
-            "rate-limit",
-            "account_lock",
-        ],
+        choices=defenses,
         help="Defense mechanism to enable"
     )
 
     parser.add_argument(
         "--hash-mode",
         required=True,
-        choices=[
-            "SHA_PLAIN",
-            "SHA_SALT",
-            "SHA_PEPPER",
-            "SHA_SALT_PEPPER",
-            "BCRYPT",
-            "BCRYPT_PEPPER",
-            "ARGON2",
-            "ARGON2_PEPPER"
-        ],
+        choices=hash_modes,
         help="Hash mode to use"
     )
 
@@ -107,8 +95,7 @@ def iterate_over_user(username, passwords, client: LoginClient, timeout=45):
 
 
 
-def main():
-    defense, hash_mode = parse_args()
+def run(defense, hash_mode):
     server = Server(defense, hash_mode)
     client = LoginClient(server, group_seed)
 
@@ -135,7 +122,13 @@ def main():
 
 if __name__ == "__main__":
     try:
-        main()
+        #defense, hash_mode = parse_args()
+        for defense in defenses:
+            for hash_mode in hash_modes:
+                print(f"### START: {defense}, {hash_mode}")
+                run(defense, hash_mode)
+                print(f"### END  : {defense}, {hash_mode}")
+
     except KeyboardInterrupt:
         print("Exiting....")
         raise SystemExit(0)

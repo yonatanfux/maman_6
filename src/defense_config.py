@@ -22,10 +22,14 @@ class DefenseConfig:
             return "account_lock"
 
     def __str__(self):
-        return json.dumps({
+        configs = {
             "no_defense": self.no_defense,
             "totp": self.totp,
             "captcha": self.captcha,
             "rate_limit": self.rate_limit,
-            "account_lock": self.account_lock
-        })
+            "account_lock": self.account_lock,
+            }
+
+        enabled = [name for name, enabled in configs.items() if enabled]
+
+        return "_".join(enabled) if enabled else "none"

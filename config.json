@@ -1,7 +1,7 @@
 {
   "DB_PATH": "auth.db",
   "USERS_PATH": "users.json",
-  "ATTEMPTS_LOG": "attempts.log",
+  "ATTEMPTS_LOG_PREFIX": "logs\\attempts",
   "GROUP_SEED": 413134,
   "GLOBAL_PEPPER": "0urG10bAlP3PPer",
   "BCRYPT_COST": 12,

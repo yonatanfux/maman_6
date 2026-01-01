@@ -26,12 +26,15 @@ class Server(object):
         with open("config.json", 'r') as f:
             self._config = json.loads(f.read())
 
-        self._attempts_file = open(self._config["ATTEMPTS_LOG"], "a", encoding="utf-8")
-
         self._defense_config = DefenseConfig(defense_config)
         self._hash_mode = hash_mode
         self._sql_manager = SqlManager(self._config['DB_PATH'])
         self._hash_manager = ManageHash(hash_mode, self._config)
+
+        logfile_name = self._config["ATTEMPTS_LOG_PREFIX"] + "__" + str(self._defense_config) \
+        + "__" + str.lower(self._hash_mode) + '.log'
+
+        self._attempts_file = open(logfile_name, "a", encoding="utf-8")
 
         self._rate_counters = dict()
         self._current_captcha = secrets.token_urlsafe(16)
