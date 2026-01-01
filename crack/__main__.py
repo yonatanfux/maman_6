@@ -60,14 +60,14 @@ with open('crack/popular_passwords.txt', 'r') as f:
         weak_passwords.append(line.strip())
 
 
-def build_password_map(med_amount = 300000, strong_amount=100000):
+def build_password_map(med_amount = 600000, strong_amount=1500000):
     passwords = []
     with open('crack/popular_passwords.txt', 'r') as f:
         for line in f:
             passwords.append(line.strip())
-    for i in range(med_amount):
+    for _ in range(med_amount):
         passwords.append(generate_medium_password())
-    for i in range(strong_amount):
+    for _ in range(strong_amount):
         passwords.append(generate_strong_password())
 
     return passwords
@@ -87,23 +87,26 @@ def iterate_over_user(username, passwords, server):
     return False
 
 
-passwords = build_password_map()
-defense, hash_mode = parse_args()
-server = Server(defense, hash_mode)
+def main():
+    defense, hash_mode = parse_args()
+    server = Server(defense, hash_mode)
 
-for i in range(1, 30+1, 1):
-    level = int(i / 10)
-    if level == 0:
-        state = 'weak'
-    elif level == 1:
-        state = 'medium'
-    elif level == 2:
-        state = 'strong'
-    
-    idx = i % 10 if i % 10 != 0 else 10
-    username = f'user_{state}_{idx}'
+    print("Creating password map...")
+    passwords = build_password_map()
+    print("Password map created")
 
-    
-    print(f"iterating over {username}...")
-    iterate_over_user(username, passwords, server)
+    levels = ['weak', 'medium', 'strong']
+    for i in range(3):
+        for idx in range(1, 10+1):
+            username = f'user_{levels[i]}_{idx}'
 
+            print(f"iterating over {username}...")
+            iterate_over_user(username, passwords, server)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Exiting....")
+        exit()

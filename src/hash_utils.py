@@ -4,55 +4,51 @@ import bcrypt
 import base64
 import random 
 import string
-from argon2 import PasswordHasher
-
-argon2_hasher = PasswordHasher(time_cost=1, memory_cost=65536, parallelism=1)
-BCRYPT_COST = 12
-
-def random_salt(length=8):
-    return ''.join(
-        random.choices(string.ascii_letters + string.digits, k=length)
-    )
-
-def sha256_hash(password: str, salt: str = "", pepper: str = "") -> str:
-    data = (password + salt + pepper).encode("utf-8")
-    return hashlib.sha256(data).hexdigest()
-
-def sha256_check(pw_hash: str, password: str, salt: str = "", pepper: str = "") -> bool:
-        expected = sha256_hash(password, salt, pepper)
-        return hmac.compare_digest(expected, pw_hash)
-
-def bcrypt_hash(password: str, bcrypt_cost, pepper="") -> str:
-    data = (password + pepper).encode("utf-8")
-    return base64.b64encode(bcrypt.hashpw(data, bcrypt.gensalt(rounds=bcrypt_cost)))
+import argon2
 
 
-def bcrypt_check(pw_hash_b64: str, password: str, pepper="") -> bool:
-    data = (password + pepper).encode("utf-8")
-    pw_hash = base64.b64decode(pw_hash_b64)
-    return bcrypt.checkpw(data, pw_hash)
+class HashUtils(object):
+    def __init__(self, config):
+        self.argon2_hasher = argon2.PasswordHasher(time_cost=config['ARGON2_TIME'], 
+                                                   memory_cost=config['ARGON2_MEMORY_COST'], 
+                                                   parallelism=config['ARGON2_PARALLEL'])
+        
+        self.bcrypt_cost = config['BCRYPT_COST']
+
+    @staticmethod
+    def random_salt(length=8):
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+    @staticmethod
+    def sha256_hash(password: str, salt: str = "", pepper: str = "") -> str:
+        data = (password + salt + pepper).encode("utf-8")
+        return hashlib.sha256(data).hexdigest()
 
 
-def argon2_hash(password: str, pepper="") -> str:
-    data = (password + pepper).encode("utf-8")
-    return argon2_hasher.hash(data)
+    def sha256_check(self, pw_hash: str, password: str, salt: str = "", pepper: str = "") -> bool:
+            expected = self.sha256_hash(password, salt, pepper)
+            return hmac.compare_digest(expected, pw_hash)
 
-
-def argon2_check(pw_hash: str, password: str, pepper="") -> bool:
-    try:
+    def bcrypt_hash(self, password: str, pepper="") -> str:
         data = (password + pepper).encode("utf-8")
-        return argon2_hasher.verify(pw_hash, data)
-    except Exception:
-        return False
+        return base64.b64encode(bcrypt.hashpw(data, bcrypt.gensalt(rounds=self.bcrypt_cost)))
+
+    @staticmethod
+    def bcrypt_check(pw_hash_b64: str, password: str, pepper="") -> bool:
+        data = (password + pepper).encode("utf-8")
+        pw_hash = base64.b64decode(pw_hash_b64)
+        return bcrypt.checkpw(data, pw_hash)
 
 
-def verify_password(password: str, stored_hash, mode: str, salt: str = None, pepper: str = ""):
-    if mode == "sha256":
-        expected = sha256_hash(password, salt, pepper)
-        return hmac.compare_digest(expected, stored_hash)
-    elif mode == "bcrypt":
-        return bcrypt_check(password, stored_hash, pepper)
-    elif mode == "argon2":
-        return argon2_check(password, stored_hash, pepper)
-    else:
-        return False
+    def argon2_hash(self, password: str, pepper="") -> str:
+        data = (password + pepper).encode("utf-8")
+        return self.argon2_hasher.hash(data)
+
+
+    def argon2_check(self, pw_hash: str, password: str, pepper="") -> bool:
+        try:
+            data = (password + pepper).encode("utf-8")
+            return self.argon2_hasher.verify(pw_hash, data)
+        except Exception:
+            return False
+

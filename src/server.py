@@ -31,7 +31,7 @@ class Server(object):
         self._defense_config = DefenseConfig(defense_config)
         self._hash_mode = hash_mode
         self._sql_manager = SqlManager(self._config['DB_PATH'])
-        self._hash_manager = ManageHash(hash_mode, self._config['GLOBAL_PEPPER'])
+        self._hash_manager = ManageHash(hash_mode, self._config)
 
         self._rate_counters = dict()
         self._current_captcha = secrets.token_urlsafe(16)
