@@ -120,7 +120,7 @@ def iterate_over_passwords(usernames, passwords, client: LoginClient, timeout=45
                 tqdm.write(f"[counter: {counter}] [X] TOTP fail: password correct but TOTP code failed")
                 active_usernames.remove(username)
                 break
-            
+
             else:
                 counter += 1
 
@@ -175,12 +175,12 @@ def run(defense, hash_mode):
 
 if __name__ == "__main__":
     try:
-        #defense, hash_mode = parse_args()
-        for defense in defenses:
-            for hash_mode in hash_modes:
-                print(f"### START: {defense}, {hash_mode}")
-                run(defense, hash_mode)
-                print(f"### END  : {defense}, {hash_mode}")
+        defense, hash_mode = parse_args()
+        #for defense in defenses:
+         #   for hash_mode in hash_modes:
+        print(f"### START: {defense}, {hash_mode}")
+        run(defense, hash_mode)
+        print(f"### END  : {defense}, {hash_mode}")
 
     except KeyboardInterrupt:
         print("Exiting....")
