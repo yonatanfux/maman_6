@@ -13,7 +13,7 @@ from src.defense_config import DefenseConfig
 
 class Server(object):
 
-    def __init__(self, defense_config: list, hash_mode: str):
+    def __init__(self, defense_config: list, hash_mode: str, run_mode: str):
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
@@ -31,7 +31,8 @@ class Server(object):
         self._sql_manager = SqlManager(self._config['DB_PATH'])
         self._hash_manager = ManageHash(hash_mode, self._config)
 
-        logfile_name = self._config["ATTEMPTS_LOG_PREFIX"] + "__" + str(self._defense_config) \
+        # Create log with a file name according to the run mode, hash mode and defense flags
+        logfile_name = self._config["ATTEMPTS_LOG_PREFIX"] + "__" + run_mode + "__" + str(self._defense_config) \
         + "__" + str.lower(self._hash_mode) + '.log'
 
         self._attempts_file = open(logfile_name, "a", encoding="utf-8")
