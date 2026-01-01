@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__account_lock__sha_salt_pepper.log",
+  "total_attempts": 5564,
+  "attempts_per_second": 5.297899569256579,
+  "time_to_first_success_ms": 0.067,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 1887.5404996405466,
+  "weak_worst_seconds": 3775.080999281093,
+  "medium_expected_seconds": 165877.05910841125,
+  "medium_worst_seconds": 331754.1182168225,
+  "strong_expected_seconds": 4.5729368183171537e+27,
+  "strong_worst_seconds": 9.145873636634307e+27
+}

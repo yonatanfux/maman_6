@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__rate_limit__bcrypt.log",
+  "total_attempts": 3580,
+  "attempts_per_second": 3.3872835381055357,
+  "time_to_first_success_ms": 2618.845,
+  "weak_total_users": 10,
+  "weak_successful_users": 9,
+  "weak_success_rate": 0.9,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 2952.2181675977654,
+  "weak_worst_seconds": 5904.436335195531,
+  "medium_expected_seconds": 259440.9325684916,
+  "medium_worst_seconds": 518881.8651369832,
+  "strong_expected_seconds": 7.152327145766435e+27,
+  "strong_worst_seconds": 1.430465429153287e+28
+}

@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__rainbow__none__bcrypt.log",
+  "total_attempts": 197,
+  "attempts_per_second": 4.388999474099834,
+  "time_to_first_success_ms": 21073.127,
+  "weak_total_users": 10,
+  "weak_successful_users": 3,
+  "weak_success_rate": 0.3,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 2278.423604060914,
+  "weak_worst_seconds": 4556.847208121828,
+  "medium_expected_seconds": 200227.86632487312,
+  "medium_worst_seconds": 400455.73264974623,
+  "strong_expected_seconds": 5.519927751863959e+27,
+  "strong_worst_seconds": 1.1039855503727919e+28
+}

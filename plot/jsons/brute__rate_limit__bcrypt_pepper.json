@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__rate_limit__bcrypt_pepper.log",
+  "total_attempts": 2986,
+  "attempts_per_second": 2.8202741480259705,
+  "time_to_first_success_ms": 2337.495,
+  "weak_total_users": 10,
+  "weak_successful_users": 9,
+  "weak_success_rate": 0.9,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 3545.754588077696,
+  "weak_worst_seconds": 7091.509176155392,
+  "medium_expected_seconds": 311600.91320026794,
+  "medium_worst_seconds": 623201.8264005359,
+  "strong_expected_seconds": 8.590285457517481e+27,
+  "strong_worst_seconds": 1.7180570915034962e+28
+}

@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__rainbow__captcha__argon2.log",
+  "total_attempts": 342,
+  "attempts_per_second": 7.27939056601625,
+  "time_to_first_success_ms": 5078.764999999999,
+  "weak_total_users": 10,
+  "weak_successful_users": 6,
+  "weak_success_rate": 0.6,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 1373.741374269006,
+  "weak_worst_seconds": 2747.482748538012,
+  "medium_expected_seconds": 120724.39197076023,
+  "medium_worst_seconds": 241448.78394152047,
+  "strong_expected_seconds": 3.3281577324760234e+27,
+  "strong_worst_seconds": 6.656315464952047e+27
+}

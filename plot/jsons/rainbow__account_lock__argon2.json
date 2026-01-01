@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__rainbow__account_lock__argon2.log",
+  "total_attempts": 875,
+  "attempts_per_second": 19.456020776806646,
+  "time_to_first_success_ms": 5922.09,
+  "weak_total_users": 10,
+  "weak_successful_users": 6,
+  "weak_success_rate": 0.6,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 513.9797142857143,
+  "weak_worst_seconds": 1027.9594285714286,
+  "medium_expected_seconds": 45168.53729142857,
+  "medium_worst_seconds": 90337.07458285714,
+  "strong_expected_seconds": 1.2452165978811428e+27,
+  "strong_worst_seconds": 2.4904331957622855e+27
+}

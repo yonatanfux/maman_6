@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__account_lock__argon2_pepper.log",
+  "total_attempts": 4523,
+  "attempts_per_second": 4.142738937473761,
+  "time_to_first_success_ms": 665.061,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 2413.861976564227,
+  "weak_worst_seconds": 4827.723953128454,
+  "medium_expected_seconds": 212130.1905004643,
+  "medium_worst_seconds": 424260.3810009286,
+  "strong_expected_seconds": 5.848053755174247e+27,
+  "strong_worst_seconds": 1.1696107510348494e+28
+}

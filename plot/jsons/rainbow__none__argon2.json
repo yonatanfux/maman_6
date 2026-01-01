@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__rainbow__none__argon2.log",
+  "total_attempts": 773,
+  "attempts_per_second": 17.192801229554412,
+  "time_to_first_success_ms": 4674.344,
+  "weak_total_users": 10,
+  "weak_successful_users": 6,
+  "weak_success_rate": 0.6,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 581.6387839586029,
+  "weak_worst_seconds": 1163.2775679172057,
+  "medium_expected_seconds": 51114.41633428202,
+  "medium_worst_seconds": 102228.83266856403,
+  "strong_expected_seconds": 1.4091339553413713e+27,
+  "strong_worst_seconds": 2.8182679106827426e+27
+}

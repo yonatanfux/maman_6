@@ -1,0 +1,214 @@
+{
+    "users": [
+        {
+            "username": "user_weak_1",
+            "sha_salt": "KaW3ZpZK",
+            "password": "password",
+            "strongness": "weak",
+            "totp_secret": "75K6OBF5HZ6NEJUZ7TLAHNKD7F6Q7DB7"
+        },
+        {
+            "username": "user_weak_2",
+            "sha_salt": "rIbod5OL",
+            "password": "welcome",
+            "strongness": "weak",
+            "totp_secret": "3ULUPBJVF7ERRSFTNZY4M3LH6C2KYG6U"
+        },
+        {
+            "username": "user_weak_3",
+            "sha_salt": "JtApfTrg",
+            "password": "qwerty",
+            "strongness": "weak",
+            "totp_secret": "O7ZEU2FKOALOWMF7KPWDX7H3XXPJZTUQ"
+        },
+        {
+            "username": "user_weak_4",
+            "sha_salt": "fwnQ9BBA",
+            "password": "413134",
+            "strongness": "weak",
+            "totp_secret": "NMZS5FWDZ4YMF4RAL2HOMADVZA7FPAZN"
+        },
+        {
+            "username": "user_weak_5",
+            "sha_salt": "lGwMXTZn",
+            "password": "letmein",
+            "strongness": "weak",
+            "totp_secret": "DUSFTEQR2IVH77N2ZI43FMQ3PAXTJKY2"
+        },
+        {
+            "username": "user_weak_6",
+            "sha_salt": "PE9CbeDK",
+            "password": "monkey",
+            "strongness": "weak",
+            "totp_secret": "ENRENGUKSF3GWCH35BWQ7YLC7FGP2E2F"
+        },
+        {
+            "username": "user_weak_7",
+            "sha_salt": "RT6IMx7T",
+            "password": "dragon",
+            "strongness": "weak",
+            "totp_secret": "HLTJ5DKY7H3RWOWVWM5D5RBHJLFBIUJZ"
+        },
+        {
+            "username": "user_weak_8",
+            "sha_salt": "UT4S6nFq",
+            "password": "football",
+            "strongness": "weak",
+            "totp_secret": "ZILD7QURIB534JJ7DGMSUXEJUOWANJRQ"
+        },
+        {
+            "username": "user_weak_9",
+            "sha_salt": "lxqwRejq",
+            "password": "hello",
+            "strongness": "weak",
+            "totp_secret": "R7FPBZEIRM6EO66HASFBUROTYOGKPL2P"
+        },
+        {
+            "username": "user_weak_10",
+            "sha_salt": "xWDrxi45",
+            "password": "secret",
+            "strongness": "weak",
+            "totp_secret": "BDC2NCUAJHLMTW42CIOXLBGVY67KXDSR"
+        },
+        {
+            "username": "user_medium_1",
+            "sha_salt": "A9Fq2M8K",
+            "password": "riv42",
+            "strongness": "medium",
+            "totp_secret": "I4GY24FUFSWDW6UXG6H62JZHP4WEPR2C"
+        },
+        {
+            "username": "user_medium_2",
+            "sha_salt": "Z7mQX3P9",
+            "password": "sto77",
+            "strongness": "medium",
+            "totp_secret": "YDTPX3O2A33LF52GMHFPOWIVOIBF4HWE"
+        },
+        {
+            "username": "user_medium_3",
+            "sha_salt": "K2R8B9Lm",
+            "password": "clo09",
+            "strongness": "medium",
+            "totp_secret": "6DQJ4EZSD2UNEVNFF7DEIAGQRDBCJWNQ"
+        },
+        {
+            "username": "user_medium_4",
+            "sha_salt": "M4Q8ZP7A",
+            "password": "app64",
+            "strongness": "medium",
+            "totp_secret": "5XJJXI4O5AFCMVHFHW3UM74DJZ34MK4G"
+        },
+        {
+            "username": "user_medium_5",
+            "sha_salt": "X9K7R2M8",
+            "password": "riv18",
+            "strongness": "medium",
+            "totp_secret": "CFSU2ZNLQCT7AK6Q5UKJOMCIY45DNO7A"
+        },
+        {
+            "username": "user_medium_6",
+            "sha_salt": "P8A7Z9QK",
+            "password": "gra91",
+            "strongness": "medium",
+            "totp_secret": "I4V2UM6YSOJ3KQB253N3CCI4WOSSAEP2"
+        },
+        {
+            "username": "user_medium_7",
+            "sha_salt": "R2M9X8K7",
+            "password": "pla53",
+            "strongness": "medium",
+            "totp_secret": "4UQOTOF343TMIXEP3IYURTHMAV5QZYJ7"
+        },
+        {
+            "username": "user_medium_8",
+            "sha_salt": "7Q8A9PMK",
+            "password": "wat26",
+            "strongness": "medium",
+            "totp_secret": "VWK3FDIAJS3AJW3CV4G3LPEUIM74QIWW"
+        },
+        {
+            "username": "user_medium_9",
+            "sha_salt": "K9P8A7MQ",
+            "password": "ear84",
+            "strongness": "medium",
+            "totp_secret": "R5MR7RVN5S25TGP3S3WLFPRFKWXSFC6Z"
+        },
+        {
+            "username": "user_medium_10",
+            "sha_salt": "M8Q7K9PA",
+            "password": "fie60",
+            "strongness": "medium",
+            "totp_secret": "2AHGGGGLALTLO6QUU5OSC6NOBN7C4726"
+        },
+        {
+            "username": "user_strong_1",
+            "sha_salt": "UMeg2Cl6",
+            "password": "RvZ7bKSJMafxZPCC",
+            "strongness": "strong",
+            "totp_secret": "PFHEOP3TMNGOHW54BEJRP7RXHA57QVHI"
+        },
+        {
+            "username": "user_strong_2",
+            "sha_salt": "afPle87E",
+            "password": "8UeshTWWj4gGOL",
+            "strongness": "strong",
+            "totp_secret": "XQ4F5ZKDB3GUODZ4BZKULE3RNH65YUNW"
+        },
+        {
+            "username": "user_strong_3",
+            "sha_salt": "EN4kQPjJ",
+            "password": "82eqhXYj6g2OA",
+            "strongness": "strong",
+            "totp_secret": "VCKX6NOK7A2F2EYKC52KEGVL64RYOIVI"
+        },
+        {
+            "username": "user_strong_4",
+            "sha_salt": "SJINxmnZ",
+            "password": "PTUGTED",
+            "strongness": "strong",
+            "totp_secret": "L7SMFPWMMF4LGEJT7PEDPJ2VSTLV4SDO"
+        },
+        {
+            "username": "user_strong_5",
+            "sha_salt": "cw85iAz1",
+            "password": "FRlsHU9iE6wZDDN",
+            "strongness": "strong",
+            "totp_secret": "H5QQ7MY6U7S5FBIWRKLXPOG4N35DYGTR"
+        },
+        {
+            "username": "user_strong_6",
+            "sha_salt": "qNig9gyV",
+            "password": "NTiCm5E1JF0SoO",
+            "strongness": "strong",
+            "totp_secret": "7Z6R4ZFM7E7MJOFZMJDDDCKEEIVX3LE4"
+        },
+        {
+            "username": "user_strong_7",
+            "sha_salt": "KnwzwFh4",
+            "password": "6dsaFH23cF2",
+            "strongness": "strong",
+            "totp_secret": "KYVIHRQ2SMCW5FXTUADTKDFUNHFXCWEG"
+        },
+        {
+            "username": "user_strong_8",
+            "sha_salt": "SUgsLmFt",
+            "password": "ABCD1234DEFGH23",
+            "strongness": "strong",
+            "totp_secret": "NMCQXZVQ3TQFLVNL2VI7JCHVUBHHCSSP"
+        },
+        {
+            "username": "user_strong_9",
+            "sha_salt": "SmmRF1Cb",
+            "password": "Z37djf84jg9",
+            "strongness": "strong",
+            "totp_secret": "4QP2ZDFIZDEUQKK3TZJG4I5ONNE6NDDN"
+        },
+        {
+            "username": "user_strong_10",
+            "sha_salt": "BRRTGIon",
+            "password": "FM37fdj49xQ",
+            "strongness": "strong",
+            "totp_secret": "7LSJD4YG63IFLHPRRQCMDITGZZPFGWKR"
+        }
+    ]
+}

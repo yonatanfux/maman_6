@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__account_lock__bcrypt_pepper.log",
+  "total_attempts": 2574,
+  "attempts_per_second": 2.386176334289132,
+  "time_to_first_success_ms": 1647.499,
+  "weak_total_users": 10,
+  "weak_successful_users": 9,
+  "weak_success_rate": 0.9,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 4190.80512043512,
+  "weak_worst_seconds": 8381.61024087024,
+  "medium_expected_seconds": 368287.95398383844,
+  "medium_worst_seconds": 736575.9079676769,
+  "strong_expected_seconds": 1.0153046802057684e+28,
+  "strong_worst_seconds": 2.030609360411537e+28
+}

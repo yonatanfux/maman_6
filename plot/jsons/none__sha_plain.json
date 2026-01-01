@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__none__sha_plain.log",
+  "total_attempts": 32387320,
+  "attempts_per_second": 113172.06215819139,
+  "time_to_first_success_ms": 0.24899999999999997,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 4,
+  "medium_success_rate": 0.4,
+  "strong_total_users": 10,
+  "strong_successful_users": 5,
+  "strong_success_rate": 0.5,
+  "weak_expected_seconds": 0.08836103018094736,
+  "weak_worst_seconds": 0.17672206036189472,
+  "medium_expected_seconds": 7.765167332301655,
+  "medium_worst_seconds": 15.53033466460331,
+  "strong_expected_seconds": 2.1407191437526043e+23,
+  "strong_worst_seconds": 4.2814382875052087e+23
+}

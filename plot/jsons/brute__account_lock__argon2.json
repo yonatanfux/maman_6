@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__account_lock__argon2.log",
+  "total_attempts": 4398,
+  "attempts_per_second": 4.114143570024004,
+  "time_to_first_success_ms": 405.818,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 2430.639531605275,
+  "weak_worst_seconds": 4861.27906321055,
+  "medium_expected_seconds": 213604.60203747157,
+  "medium_worst_seconds": 427209.20407494315,
+  "strong_expected_seconds": 5.888700670661973e+27,
+  "strong_worst_seconds": 1.1777401341323947e+28
+}

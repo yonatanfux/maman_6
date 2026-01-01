@@ -1,0 +1,21 @@
+{
+  "logfile": "attempts__brute__captcha__argon2_pepper.log",
+  "total_attempts": 4383,
+  "attempts_per_second": 4.242710931869755,
+  "time_to_first_success_ms": 529.774,
+  "weak_total_users": 10,
+  "weak_successful_users": 10,
+  "weak_success_rate": 1.0,
+  "medium_total_users": 10,
+  "medium_successful_users": 0,
+  "medium_success_rate": 0.0,
+  "strong_total_users": 10,
+  "strong_successful_users": 0,
+  "strong_success_rate": 0.0,
+  "weak_expected_seconds": 2356.983579739904,
+  "weak_worst_seconds": 4713.967159479808,
+  "medium_expected_seconds": 207131.71698754278,
+  "medium_worst_seconds": 414263.43397508556,
+  "strong_expected_seconds": 5.710254690701546e+27,
+  "strong_worst_seconds": 1.1420509381403092e+28
+}

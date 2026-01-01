@@ -1,0 +1,7 @@
+pyotp 
+bcrypt
+argon2-cffi
+tqdm
+
+pandas
+matplotlib
