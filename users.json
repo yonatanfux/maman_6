@@ -124,61 +124,61 @@
   {
     "username": "user_strong_1",
     "sha_salt": "UMeg2Cl6",
-    "password": "A9$fQ2xL!",
+    "password": "RvZ7bKSJMafxZPCC",
     "strongness": "strong"
   },
   {
     "username": "user_strong_2",
     "sha_salt": "afPle87E",
-    "password": "zR8@L#1P",
+    "password": "8UeshTWWj4gGOL",
     "strongness": "strong"
   },
   {
     "username": "user_strong_3",
     "sha_salt": "EN4kQPjJ",
-    "password": "M7!xK2@Q",
+    "password": "82eqhXYj6g2OA",
     "strongness": "strong"
   },
   {
     "username": "user_strong_4",
     "sha_salt": "SJINxmnZ",
-    "password": "P@9XcL!4",
+    "password": "PTUGTED",
     "strongness": "strong"
   },
   {
     "username": "user_strong_5",
     "sha_salt": "cw85iAz1",
-    "password": "8#Fq!ZL2",
+    "password": "FRlsHU9iE6wZDDN",
     "strongness": "strong"
   },
   {
     "username": "user_strong_6",
     "sha_salt": "qNig9gyV",
-    "password": "K!4Rz@9X",
+    "password": "NTiCm5E1JF0SoO",
     "strongness": "strong"
   },
   {
     "username": "user_strong_7",
     "sha_salt": "KnwzwFh4",
-    "password": "7@QxL!F2",
+    "password": "6dsaFH23cF2",
     "strongness": "strong"
   },
   {
     "username": "user_strong_8",
     "sha_salt": "SUgsLmFt",
-    "password": "L2@!X9Rq",
+    "password": "ABCD1234DEFGH23",
     "strongness": "strong"
   },
   {
     "username": "user_strong_9",
     "sha_salt": "SmmRF1Cb",
-    "password": "Z!9x@Q4L",
+    "password": "Z37djf84jg9",
     "strongness": "strong"
   },
   {
     "username": "user_strong_10",
     "sha_salt": "BRRTGIon",
-    "password": "F@2L!9xQ",
+    "password": "FM37fdj49xQ",
     "strongness": "strong"
   }
 

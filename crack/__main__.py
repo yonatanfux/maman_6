@@ -49,9 +49,10 @@ def generate_medium_password():
     return letters + digits
 
 
-def generate_strong_password(min_len=2, max_len=16):
+def generate_strong_password(min_len=6, max_len=16):
     length = secrets.randbelow(max_len - min_len + 1) + min_len
-    return ''.join(secrets.choice(string.ascii_lowercase) for _ in range(length))
+    return "".join(secrets.choice(string.ascii_letters + string.digits) for _ in range(length))
+
 
 
 weak_passwords = []
@@ -60,7 +61,7 @@ with open('crack/popular_passwords.txt', 'r') as f:
         weak_passwords.append(line.strip())
 
 
-def build_password_map(med_amount = 600000, strong_amount=1500000):
+def build_password_map(med_amount = 500000, strong_amount=1500000):
     passwords = []
     with open('crack/popular_passwords.txt', 'r') as f:
         for line in f:
@@ -91,9 +92,15 @@ def main():
     defense, hash_mode = parse_args()
     server = Server(defense, hash_mode)
 
-    print("Creating password map...")
-    passwords = build_password_map()
-    print("Password map created")
+    print("Loading password map...")
+    # passwords = build_password_map()
+    # with open('password_map.txt', 'w+') as f:
+    #    for p in passwords:
+    #        f.write(f"{p}\n")
+    passwords = []
+    with open('password_map.txt', 'r') as f:
+        passwords = [line.strip() for line in f]
+    print("Password map loaded")
 
     levels = ['weak', 'medium', 'strong']
     for i in range(3):
