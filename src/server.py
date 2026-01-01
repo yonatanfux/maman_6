@@ -13,7 +13,7 @@ from src.defense_config import DefenseConfig
 
 class Server(object):
 
-    def __init__(self, defense_config, hash_mode):
+    def __init__(self, defense_config: list, hash_mode: str):
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"

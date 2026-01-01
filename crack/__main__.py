@@ -1,9 +1,47 @@
 from crack.client import LoginClient
 import secrets
 import string
+from argparse import ArgumentParser
 from src.server import Server
 
 group_seed = 413134
+
+def parse_args():
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--defense",
+        required=True,
+        nargs="+",
+        choices=[
+            "no-defense",
+            "totp",
+            "captcha",
+            "rate-limit",
+            "account_lock",
+        ],
+        help="Defense mechanism to enable"
+    )
+
+    parser.add_argument(
+        "--hash-mode",
+        required=True,
+        choices=[
+            "SHA_PLAIN",
+            "SHA_SALT",
+            "SHA_PEPPER",
+            "SHA_SALT_PEPPER",
+            "BCRYPT",
+            "BCRYPT_PEPPER",
+            "ARGON2",
+            "ARGON2_PEPPER"
+        ],
+        help="Hash mode to use"
+    )
+
+    args = parser.parse_args()
+
+    return args.defense, args.hash_mode
+
 
 def generate_medium_password():
     letters = ''.join(secrets.choice(string.ascii_lowercase) for _ in range(3))
@@ -50,7 +88,8 @@ def iterate_over_user(username, passwords, server):
 
 
 passwords = build_password_map()
-server = Server('totp', 'SHA_PLAIN')
+defense, hash_mode = parse_args()
+server = Server(defense, hash_mode)
 
 for i in range(1, 30+1, 1):
     level = int(i / 10)
