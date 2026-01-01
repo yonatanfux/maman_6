@@ -1,1 +1,3 @@
-"# maman_6" 
+"# maman_6"
+
+GROUP_SEED: 413134
