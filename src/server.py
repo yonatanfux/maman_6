@@ -103,7 +103,7 @@ class Server(object):
         if user:
             fails = user["failed_attempts"] + 1
             lock_until = None
-            if fails >= self._config["LOCKOUT_THRESHOLD"]:
+            if self._defense_config.account_lock and self.fails >= self._config["LOCKOUT_THRESHOLD"]:
                 lock_until = (datetime.now(timezone.utc) + timedelta(seconds=self._config["LOCKOUT_SECONDS"])).isoformat()
                 fails = 0
 
@@ -115,10 +115,10 @@ class Server(object):
 
 
     def captcha_required_for(self, username):
-        username = self._sql_manager.get_user_by_username(username)
-        if not username:
+        username_sql = self._sql_manager.get_user_by_username(username)
+        if not username_sql:
             return False
-        return username["failed_attempts"] >= self._config["CAPTCHA_AFTER"]
+        return username_sql["failed_attempts"] >= self._config["CAPTCHA_AFTER"]
 
 
     #@app.route("/register", methods=["POST"])

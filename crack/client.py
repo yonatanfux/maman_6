@@ -43,20 +43,21 @@ class LoginClient:
         # Handle rate limit (HTTP 429).
         if status_code == 429:
             # Server doesn't include Retry-After; safest is to back off.
-            print("Got 429 rate limit. Backing off 60s then stopping (safe mode).")
+            # print("Got 429 rate limit. Backing off 60s then stopping (safe mode).")
             time.sleep(60)
-            return False
+            return False, '429'
 
         # Handle account lock (HTTP 403 with "account locked")
         if status_code == 403:
             if data.get("captcha_required") is True:
-                # Fetch a valid captcha token and retry ONCE.
+                # Simulate captcha solving (sleep: 2), fetch a valid captcha token and retry ONCE.
+                time.sleep(2)
                 captcha_token = self._fetch_captcha_token()
                 data, status_code = self.server.login(username, password, 
                                                       captcha_token=captcha_token, group_seed=self.group_seed)
             else:
-                print(f"Login blocked (403): {data}")
-                return False
+                # print(f"Login blocked (403): {data}")
+                return False, '403'
 
         if status_code == 301:
             # check TOTP is enabled on server, /login returns 200 with message "move to /login_totp".
@@ -67,38 +68,18 @@ class LoginClient:
                 data, status_code = self.server.login_totp(username, token, group_seed=self.group_seed) 
 
                 if status_code == 200:
-                    print("TOTP step success.")
-                    return True
+                    # print("TOTP step success.")
+                    return True, ''
                 else:
-                    print(f"TOTP step failed: {status_code} {data}")
-                    return False
+                    # print(f"TOTP step failed: {status_code} {data}")
+                    return False, 'totp_failed'
         
         # Otherwise, 200 on /login is full success.
         if status_code == 200:
-            print("Login success.")
-            return True
+            # print("Login success.")
+            return True, ''
         
         # Something else wrong
         else:
-            # print(f"Login failed: {resp.status_code} {resp.text}")
-            return False
-        
-
-
-def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--username", required=True)
-    ap.add_argument("--password", required=True)
-    args = ap.parse_args()
-
-    group_seed = 413134
-    base_url = 'http://192.168.1.103:5000'
-
-    client = LoginClient(base_url, group_seed)
-
-    ok = client.attempt_login_once(args.username, args.password)
-    return 0 if ok else 2
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+            # print(f"Login failed: ??????????????????????????")
+            return False, 'unknown'
